@@ -5,6 +5,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.Font
+import com.example.waveseekersfront.R
 
 // Set of Material typography styles to start with
 val Typography = Typography(
@@ -31,4 +33,16 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     )
     */
+)
+
+val NeueMontrealRegularFontFamily = FontFamily(
+    Font(R.font.neue_montreal_regular, FontWeight.Normal),
+)
+
+val NeueMontrealMediumFontFamily = FontFamily(
+    Font(R.font.neue_montreal_medium, FontWeight.Normal),
+)
+
+val NeueMontrealBoldFontFamily = FontFamily(
+    Font(R.font.neue_montreal_bold, FontWeight.Normal),
 )
