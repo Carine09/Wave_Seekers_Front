@@ -26,9 +26,8 @@ import com.example.waveseekersfront.ui.theme.NeueMontrealRegularFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealBoldFontFamily
 
-
-
-
+import android.content.Intent
+import androidx.compose.ui.platform.LocalContext
 
 class LoginActivity : ComponentActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +45,7 @@ class LoginActivity : ComponentActivity(){
 fun Login() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     Column {
         Image(
@@ -71,17 +71,22 @@ fun Login() {
             onValueChange = { password = it },
             singleLine = true
         )
+
+        LoginButton {
+            val intent = Intent(context, SpotListActivity::class.java)
+            context.startActivity(intent)
+        }
     }
 }
 
 @Composable
 fun LoginButton(onClick: () -> Unit) {
-        Button(onClick = { onClick() }) {
-            Text(
-                "Login",
-                fontFamily = NeueMontrealMediumFontFamily
-            )
-        }
+    Button(onClick = { onClick() }) {
+        Text(
+            "Login",
+            fontFamily = NeueMontrealMediumFontFamily
+        )
+    }
 }
 
 @Composable
@@ -94,6 +99,5 @@ fun GoToCreateAccountActivity() {
 fun LoginPreview() {
     Column {
         Login()
-        LoginButton {  }
     }
 }
