@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
 import kotlinx.coroutines.delay
@@ -58,9 +59,10 @@ fun LoadingScreen(onLoadingFinished: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = "Loading...",
+                text = "Surfing into the app...",
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
+                fontSize = 14.sp
             )
         }
     }

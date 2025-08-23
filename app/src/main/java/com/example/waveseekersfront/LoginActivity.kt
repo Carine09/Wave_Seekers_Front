@@ -22,9 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import com.example.waveseekersfront.ui.theme.NeueMontrealRegularFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
-import com.example.waveseekersfront.ui.theme.NeueMontrealBoldFontFamily
 
 import android.content.Intent
 import androidx.compose.ui.platform.LocalContext

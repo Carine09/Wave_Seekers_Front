@@ -18,6 +18,10 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = Orange40,
     onPrimary = Grey40,
     onSecondary = Grey80,
+
+    background = Color.White,
+    surface = Color.White,
+
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -26,12 +30,14 @@ private val LightColorScheme = lightColorScheme(
     tertiary = Orange40,
     onPrimary = Grey40,
     onSecondary = Grey80,
+
+    background = Color.White,
+    surface = Color.White,
 )
 
 @Composable
 fun WaveSeekersFrontTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
