@@ -31,6 +31,14 @@
         <activity
             android:name=".SpotListActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".NewSpotActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".SpotDetailsActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
