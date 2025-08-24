@@ -55,14 +55,14 @@ fun LoadingScreen(onLoadingFinished: () -> Unit) {
             Image(
                 painter = painterResource(R.drawable.wave_seekers_main_logo_light),
                 contentDescription = "Main wave seekers logo",
-                modifier = Modifier.size(180.dp)
+                modifier = Modifier.size(240.dp)
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = "Surfing into the app...",
+                text = "Surfin' into the app...",
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
-                fontSize = 14.sp
+                fontSize = 16.sp
             )
         }
     }
