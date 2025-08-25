@@ -1,2 +1,156 @@
 package com.example.waveseekersfront
 
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
+import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.res.painterResource
+import androidx.compose.foundation.Image
+import androidx.compose.material3.Button
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
+
+import android.content.Intent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+
+
+
+class CreateAccountActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContent {
+            WaveSeekersFrontTheme {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CreateAccount()
+                    GoToLoginActivity()
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CreateAccount() {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val fieldWidth = 280.dp
+
+    Column {
+        Image(
+            painter = painterResource(R.drawable.wave_seekers_main_logo_light),
+            contentDescription = "Main wave seekers logo",
+            modifier = Modifier
+                .size(280.dp)
+                .width(fieldWidth)
+        )
+        Text(
+            text = "Email",
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.primary,
+        )
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            singleLine = true,
+            modifier = Modifier
+                .width(fieldWidth)
+                .padding(top = 10.dp)
+        )
+        Text(
+            text = "Password",
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .padding(top = 18.dp)
+        )
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            singleLine = true,
+            modifier = Modifier
+                .width(fieldWidth)
+                .padding(top = 10.dp)
+        )
+
+        CreateAccountButton (modifier = Modifier
+            .width(fieldWidth)
+            .padding(top = 20.dp)){
+            val intent = Intent(context, SpotListActivity::class.java)
+            context.startActivity(intent)
+        }
+
+
+    }
+}
+
+@Composable
+fun CreateAccountButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit) {
+    Button(
+        onClick = { onClick() },
+        modifier = modifier,
+        shape = RoundedCornerShape(5.dp)) {
+        Text(
+            "Create an account",
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.surface,
+        )
+    }
+}
+
+@Composable
+fun GoToLoginActivity(
+    modifier: Modifier = Modifier
+) {
+
+    val context = LocalContext.current
+
+    TextButton(
+        onClick = {
+            val intent = Intent(context, LoginActivity::class.java)
+            context.startActivity(intent) },
+        modifier = modifier.padding(horizontal = 16.dp)) {
+        Text(
+            "Already have an account? Back to sign in!",
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.secondary,
+        )
+    }
+}
+
+
+@Preview (showBackground = true)
+@Composable
+fun CreateAccountActivityPreview() {
+    Column {
+        Login()
+        GoToLoginActivity()
+    }
+}

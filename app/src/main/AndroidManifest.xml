@@ -39,6 +39,9 @@
         <activity
             android:name=".SpotDetailsActivity"
             android:exported="false" />
+        <activity
+            android:name=".CreateAccountActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,8 +15,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.Image
 import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,15 +22,32 @@ import androidx.compose.runtime.setValue
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 
 import android.content.Intent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 
-class LoginActivity : ComponentActivity(){
+
+class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             WaveSeekersFrontTheme {
-                Login()
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Login()
+                    GoToCreateAccountActivity()
+                }
             }
         }
     }
@@ -44,51 +58,92 @@ fun Login() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
+    val fieldWidth = 280.dp
 
     Column {
         Image(
             painter = painterResource(R.drawable.wave_seekers_main_logo_light),
-            contentDescription = "Main wave seekers logo"
+            contentDescription = "Main wave seekers logo",
+            modifier = Modifier
+                .size(280.dp)
+                .width(fieldWidth)
         )
         Text(
             text = "Email",
             fontFamily = NeueMontrealMediumFontFamily,
             color = MaterialTheme.colorScheme.primary,
         )
-        TextField(
+        OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            singleLine = true
+            singleLine = true,
+            modifier = Modifier
+                .width(fieldWidth)
+                .padding(top = 10.dp)
         )
         Text(
             text = "Password",
-            fontFamily = NeueMontrealMediumFontFamily
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier
+                .padding(top = 18.dp)
         )
-        TextField(
+        OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            singleLine = true
+            singleLine = true,
+            modifier = Modifier
+                .width(fieldWidth)
+                .padding(top = 10.dp)
         )
 
-        LoginButton {
+        LoginButton (modifier = Modifier
+            .width(fieldWidth)
+            .padding(top = 20.dp)){
             val intent = Intent(context, SpotListActivity::class.java)
             context.startActivity(intent)
         }
+
+
     }
 }
 
 @Composable
-fun LoginButton(onClick: () -> Unit) {
-    Button(onClick = { onClick() }) {
+fun LoginButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit) {
+    Button(
+        onClick = { onClick() },
+        modifier = modifier,
+        shape = RoundedCornerShape(5.dp)) {
         Text(
             "Login",
-            fontFamily = NeueMontrealMediumFontFamily
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.surface,
         )
     }
 }
 
 @Composable
-fun GoToCreateAccountActivity() {
+fun GoToCreateAccountActivity(
+    modifier: Modifier = Modifier
+) {
+
+    val context = LocalContext.current
+    val fieldWidth = 280.dp
+
+    TextButton(
+        onClick = {
+            val intent = Intent(context, CreateAccountActivity::class.java)
+            context.startActivity(intent) },
+        modifier = modifier
+            .width(fieldWidth)) {
+        Text(
+            "Ready to find epic spots? Join the wave seeking community here!",
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.secondary,
+        )
+    }
 }
 
 
@@ -97,5 +152,6 @@ fun GoToCreateAccountActivity() {
 fun LoginPreview() {
     Column {
         Login()
+        GoToCreateAccountActivity()
     }
 }
