@@ -54,7 +54,7 @@ class SpotListActivity : ComponentActivity() {
 }
 
 @Composable
-fun HeaderSection(modifier: Modifier = Modifier) {
+fun HomeHeaderSection(modifier: Modifier = Modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -177,7 +177,7 @@ fun SpotListContent(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun NavBarButton(
+fun NavBarButtonHome(
     iconRes: Int,
     text: String,
     iconContentDescription: String,
@@ -206,7 +206,7 @@ fun NavBarButton(
 }
 
 @Composable
-fun BottomNavBar(modifier: Modifier = Modifier) {
+fun BottomNavBarHome(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     Row(
@@ -215,7 +215,7 @@ fun BottomNavBar(modifier: Modifier = Modifier) {
             .background(MaterialTheme.colorScheme.onSecondary)
             .padding(horizontal = 24.dp)
     ) {
-        NavBarButton(
+        NavBarButtonHome(
             iconRes = R.drawable.logout_grey_icon,
             text = "Log out",
             iconContentDescription = "Log out icon",
@@ -223,20 +223,18 @@ fun BottomNavBar(modifier: Modifier = Modifier) {
             onClick = {
                 val intent = Intent(context, LoginActivity::class.java)
                 context.startActivity(intent)
+                (context as? ComponentActivity)?.finish()
             },
             modifier = Modifier.weight(1f)
         )
-        NavBarButton(
+        NavBarButtonHome(
             iconRes = R.drawable.home_blue_icon,
             text = "Home",
             iconContentDescription = "Home icon",
             isActive = true,
-            onClick = {
-                // Already on home page, no action needed
-            },
             modifier = Modifier.weight(1f)
         )
-        NavBarButton(
+        NavBarButtonHome(
             iconRes = R.drawable.add_spot_grey_icon,
             text = "Add a spot",
             iconContentDescription = "Add a spot icon",
@@ -261,18 +259,18 @@ fun DisplaySpotList(modifier: Modifier = Modifier) {
                 .verticalScroll(rememberScrollState())
                 .padding(24.dp)
         ) {
-            HeaderSection()
+            HomeHeaderSection()
             SpotListContent()
         }
-        BottomNavBar()
+        BottomNavBarHome()
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun HeaderPreview() {
+fun HomeHeaderPreview() {
     WaveSeekersFrontTheme {
-        HeaderSection(modifier = Modifier.padding(32.dp))
+        HomeHeaderSection(modifier = Modifier.padding(32.dp))
     }
 }
 
@@ -304,7 +302,7 @@ fun SpotListContentPreview() {
 @Composable
 fun BottomNavBarPreview() {
     WaveSeekersFrontTheme {
-        BottomNavBar(modifier = Modifier.padding(32.dp))
+        BottomNavBarHome(modifier = Modifier.padding(32.dp))
     }
 }
 
