@@ -29,8 +29,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 
 
@@ -74,6 +78,16 @@ fun Login() {
             color = MaterialTheme.colorScheme.primary,
         )
         OutlinedTextField(
+            colors = TextFieldDefaults.colors(
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            ),
             value = email,
             onValueChange = { email = it },
             singleLine = true,
@@ -89,12 +103,23 @@ fun Login() {
                 .padding(top = 18.dp)
         )
         OutlinedTextField(
+            colors = TextFieldDefaults.colors(
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            ),
             value = password,
             onValueChange = { password = it },
             singleLine = true,
             modifier = Modifier
                 .width(fieldWidth)
-                .padding(top = 10.dp)
+                .padding(top = 10.dp),
+            visualTransformation = PasswordVisualTransformation('\u002A'),
         )
 
         LoginButton (modifier = Modifier
@@ -150,8 +175,14 @@ fun GoToCreateAccountActivity(
 @Preview (showBackground = true)
 @Composable
 fun LoginPreview() {
-    Column {
-        Login()
-        GoToCreateAccountActivity()
+    WaveSeekersFrontTheme {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Login()
+            GoToCreateAccountActivity()
+        }
     }
 }
