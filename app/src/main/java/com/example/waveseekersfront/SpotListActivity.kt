@@ -27,7 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -82,10 +81,12 @@ fun SpotCard(
     country: String,
     imageContentDescription: String,
     difficultyLevel: Int = 1,
+    onClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
+            .clickable { onClick() }
     ) {
         Image(
             painter = painterResource(imageRes),
@@ -149,6 +150,8 @@ fun SpotCard(
 
 @Composable
 fun SpotListContent(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+
     Column(
         modifier = modifier
     ) {
@@ -157,21 +160,63 @@ fun SpotListContent(modifier: Modifier = Modifier) {
             spotName = "Oahu, Hawaii",
             country = "United States of America",
             imageContentDescription = "Oahu spot picture",
-            difficultyLevel = 4
+            difficultyLevel = 4,
+            onClick = {
+                val intent = Intent(context, SpotDetailsActivity::class.java).apply {
+                    putExtra("SPOT_ID", "oahu")
+                    putExtra("SPOT_NAME", "Oahu, Hawaii")
+                    putExtra("COUNTRY", "United States of America")
+                    putExtra("IMAGE_RES", R.drawable.oahu_spot_picture)
+                    putExtra("DIFFICULTY_LEVEL", 4)
+                    putExtra("PEAK_SEASON_START", "07-22")
+                    putExtra("PEAK_SEASON_END", "08-31")
+                    putExtra("GPS_COORDINATES", "21° 28′ 00″ N, 157° 59′ 00″ O")
+                    putExtra("SURFING_CULTURE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in lorem id est vulputate vehicula et vel odio. In hac habitasse platea dictumst. Nullam iaculis dignissim orci, id fringilla dolor mollis vel. In vitae convallis felis. Vivamus eget dui at tortor mattis dapibus. Sed congue tortor dolor. Nam leo quam, pellentesque at vulputate sed, lacinia ut erat. Vivamus rhoncus scelerisque eros, a sollicitudin ipsum commodo quis. Etiam porttitor purus nibh, eget euismod augue semper in.")
+                }
+                context.startActivity(intent)
+            }
         )
         SpotCard(
             imageRes = R.drawable.skeletonbay_spot_picture,
             spotName = "Skeleton Bay",
             country = "Namibia",
             imageContentDescription = "Skeleton Bay spot picture",
-            difficultyLevel = 5
+            difficultyLevel = 5,
+            onClick = {
+                val intent = Intent(context, SpotDetailsActivity::class.java).apply {
+                    putExtra("SPOT_ID", "skeleton_bay")
+                    putExtra("SPOT_NAME", "Skeleton Bay")
+                    putExtra("COUNTRY", "Namibia")
+                    putExtra("IMAGE_RES", R.drawable.skeletonbay_spot_picture)
+                    putExtra("DIFFICULTY_LEVEL", 5)
+                    putExtra("PEAK_SEASON_START", "09-01")
+                    putExtra("PEAK_SEASON_END", "11-30")
+                    putExtra("GPS_COORDINATES", "22° 59′ 00″ S, 14° 30′ 00″ E")
+                    putExtra("SURFING_CULTURE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in lorem id est vulputate vehicula et vel odio. In hac habitasse platea dictumst. Nullam iaculis dignissim orci, id fringilla dolor mollis vel. In vitae convallis felis. Vivamus eget dui at tortor mattis dapibus. Sed congue tortor dolor. Nam leo quam, pellentesque at vulputate sed, lacinia ut erat. Vivamus rhoncus scelerisque eros, a sollicitudin ipsum commodo quis. Etiam porttitor purus nibh, eget euismod augue semper in.")
+                }
+                context.startActivity(intent)
+            }
         )
         SpotCard(
             imageRes = R.drawable.superbank_spot_picture,
             spotName = "Superbank, Gold Coast",
             country = "Australia",
             imageContentDescription = "Superbank spot picture",
-            difficultyLevel = 4
+            difficultyLevel = 4,
+            onClick = {
+                val intent = Intent(context, SpotDetailsActivity::class.java).apply {
+                    putExtra("SPOT_ID", "superbank")
+                    putExtra("SPOT_NAME", "Superbank, Gold Coast")
+                    putExtra("COUNTRY", "Australia")
+                    putExtra("IMAGE_RES", R.drawable.superbank_spot_picture)
+                    putExtra("DIFFICULTY_LEVEL", 4)
+                    putExtra("PEAK_SEASON_START", "11-28")
+                    putExtra("PEAK_SEASON_END", "02-01")
+                    putExtra("GPS_COORDINATES", "28° 10′ 00″ S, 153° 33′ 00″ E")
+                    putExtra("SURFING_CULTURE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in lorem id est vulputate vehicula et vel odio. In hac habitasse platea dictumst. Nullam iaculis dignissim orci, id fringilla dolor mollis vel. In vitae convallis felis. Vivamus eget dui at tortor mattis dapibus. Sed congue tortor dolor. Nam leo quam, pellentesque at vulputate sed, lacinia ut erat. Vivamus rhoncus scelerisque eros, a sollicitudin ipsum commodo quis. Etiam porttitor purus nibh, eget euismod augue semper in.")
+                }
+                context.startActivity(intent)
+            }
         )
     }
 }
@@ -288,7 +333,6 @@ fun SpotCardPreview() {
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
