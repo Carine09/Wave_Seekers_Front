@@ -10,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -64,7 +65,7 @@ fun AddSpotHeaderSection(modifier: Modifier = Modifier) {
         modifier = modifier.fillMaxWidth()
     ) {
         Text(
-            text = "Add Spot",
+            text = "New Spot",
             fontFamily = NeueMontrealMediumFontFamily,
             color = MaterialTheme.colorScheme.primary,
             fontSize = 20.sp
@@ -80,44 +81,169 @@ fun AddSpotHeaderSection(modifier: Modifier = Modifier) {
 
 @Composable
 fun AddSpotContent() {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    val context = LocalContext.current
-    val fieldWidth = 280.dp
+    var spotName by remember { mutableStateOf("") }
+    var country by remember { mutableStateOf("") }
+    var gpsCoordinates by remember { mutableStateOf("") }
+    var startSeason by remember { mutableStateOf("") }
+    var endSeason by remember { mutableStateOf("") }
+    var waveDifficulty by remember { mutableStateOf("") }
+    var surfingCulture by remember { mutableStateOf("") }
+    var imageUrl by remember { mutableStateOf("") }
 
+
+    val context = LocalContext.current
     Column {
+        Row (verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(R.drawable.spot_name_blue_icon),
+                contentDescription = "Blue wave icon",
+                modifier = Modifier.height(30.dp)
+            )
+
+            Text(
+                text = "Spot's name",
+                fontFamily = NeueMontrealMediumFontFamily,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .padding(start = 4.dp)
+
+            )
+        }
+            OutlinedTextField(
+                value = spotName,
+                onValueChange = { spotName = it },
+                singleLine = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp)
+
+            )
+
+
+
         Text(
-            text = "Spot's name",
+            text = "Country",
             fontFamily = NeueMontrealMediumFontFamily,
             color = MaterialTheme.colorScheme.primary,
-        )
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            singleLine = true,
-            modifier = Modifier
-                .width(fieldWidth)
-                .padding(top = 10.dp)
-        )
-        Text(
-            text = "Password",
-            fontFamily = NeueMontrealMediumFontFamily,
-            color = MaterialTheme.colorScheme.primary,
+            fontSize = 14.sp,
             modifier = Modifier
                 .padding(top = 18.dp)
         )
         OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
+            value = country,
+            onValueChange = { country = it },
             singleLine = true,
             modifier = Modifier
-                .width(fieldWidth)
+                .fillMaxWidth()
                 .padding(top = 10.dp)
         )
 
+        Text(
+            text = "GPS coordinates",
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 14.sp,
+            modifier = Modifier
+                .padding(top = 18.dp)
+        )
+        OutlinedTextField(
+            value = gpsCoordinates,
+            onValueChange = { gpsCoordinates = it },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+        )
+
+        Text(
+            text = "Peak surf season starts (MM/DD)",
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 14.sp,
+            modifier = Modifier
+                .padding(top = 18.dp)
+        )
+        OutlinedTextField(
+            value = startSeason,
+            onValueChange = { startSeason = it },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+        )
+
+        Text(
+            text = "Peak surf season ends (MM/DD)",
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 14.sp,
+            modifier = Modifier
+                .padding(top = 18.dp)
+        )
+        OutlinedTextField(
+            value = endSeason,
+            onValueChange = { endSeason = it },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+        )
+
+        Text(
+            text = "Difficulty level",
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 14.sp,
+            modifier = Modifier
+                .padding(top = 18.dp)
+        )
+        OutlinedTextField(
+            value = waveDifficulty,
+            onValueChange = { waveDifficulty = it },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+        )
+
+        Text(
+            text = "Tell us more about the surfing culture there",
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 14.sp,
+            modifier = Modifier
+                .padding(top = 18.dp)
+        )
+        OutlinedTextField(
+            value = surfingCulture,
+            onValueChange = { surfingCulture = it },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+        )
+        Text(
+            text = "Image URL",
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 14.sp,
+            modifier = Modifier
+                .padding(top = 18.dp)
+        )
+        OutlinedTextField(
+            value = imageUrl,
+            onValueChange = { imageUrl = it },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp)
+        )
+
+
         SubmitButton(
             modifier = Modifier
-                .width(fieldWidth)
+                .fillMaxWidth()
                 .padding(top = 20.dp)
         ) {
             val intent = Intent(context, SpotListActivity::class.java)
@@ -135,9 +261,10 @@ fun SubmitButton(
         modifier = modifier,
         shape = RoundedCornerShape(5.dp)) {
         Text(
-            "Submit New Spot",
+            "Submit",
             fontFamily = NeueMontrealMediumFontFamily,
             color = MaterialTheme.colorScheme.surface,
+
         )
     }
 }
@@ -249,5 +376,13 @@ fun AddSpotHeaderPreview(){
 fun NewSpotPreview() {
     WaveSeekersFrontTheme {
         DisplayNewSpotForm()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SubmitButtonPreview(){
+    WaveSeekersFrontTheme {
+        //SubmitButton()
     }
 }
