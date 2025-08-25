@@ -97,7 +97,7 @@ fun AddSpotContent() {
             Image(
                 painter = painterResource(R.drawable.spot_name_blue_icon),
                 contentDescription = "Blue wave icon",
-                modifier = Modifier.height(30.dp)
+                modifier = Modifier.height(40.dp)
             )
 
             Text(
@@ -116,130 +116,179 @@ fun AddSpotContent() {
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 10.dp)
+                    .padding(top = 10.dp, bottom = 10.dp)
+                    //padding bottom (pour remplacer le top du texte qui ne fonctonne pas)
 
             )
 
 
-
-        Text(
-            text = "Country",
-            fontFamily = NeueMontrealMediumFontFamily,
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 14.sp,
-            modifier = Modifier
-                .padding(top = 18.dp)
-        )
+        Row (verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(R.drawable.country_blue_icon),
+                contentDescription = "Blue world icon",
+                modifier = Modifier.height(30.dp)
+            )
+            Text(
+                text = "Country",
+                fontFamily = NeueMontrealMediumFontFamily,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .padding(start = 4.dp)
+            )
+        }
         OutlinedTextField(
             value = country,
             onValueChange = { country = it },
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp)
+                .padding(top = 10.dp, bottom = 10.dp) //remplace le top
         )
 
-        Text(
-            text = "GPS coordinates",
-            fontFamily = NeueMontrealMediumFontFamily,
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 14.sp,
-            modifier = Modifier
-                .padding(top = 18.dp)
-        )
+        Row (verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(R.drawable.gps_coordinates_blue_icon),
+                contentDescription = "Blue location pin icon",
+                modifier = Modifier.height(30.dp)
+            )
+            Text(
+                text = "GPS coordinates",
+                fontFamily = NeueMontrealMediumFontFamily,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .padding(start = 4.dp)
+            )
+        }
         OutlinedTextField(
             value = gpsCoordinates,
             onValueChange = { gpsCoordinates = it },
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp)
+                .padding(top = 10.dp, bottom = 10.dp)
         )
 
-        Text(
-            text = "Peak surf season starts (MM/DD)",
-            fontFamily = NeueMontrealMediumFontFamily,
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 14.sp,
-            modifier = Modifier
-                .padding(top = 18.dp)
-        )
+        Row (verticalAlignment = Alignment.CenterVertically) { //Padding top de 18.dp ici?
+            Image(
+                painter = painterResource(R.drawable.peak_season_blue_icon),
+                contentDescription = "Blue calendar icon",
+                modifier = Modifier.height(30.dp)
+            )
+            Text(
+                text = "Peak surf season starts (MM/DD)",
+                fontFamily = NeueMontrealMediumFontFamily,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .padding(start = 4.dp)
+            )
+        }
         OutlinedTextField(
             value = startSeason,
             onValueChange = { startSeason = it },
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp)
+                .padding(top = 10.dp, bottom = 10.dp)
         )
 
-        Text(
-            text = "Peak surf season ends (MM/DD)",
-            fontFamily = NeueMontrealMediumFontFamily,
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 14.sp,
-            modifier = Modifier
-                .padding(top = 18.dp)
-        )
+        Row (verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(R.drawable.peak_season_blue_icon),
+                contentDescription = "Blue calendar icon",
+                modifier = Modifier.height(30.dp)
+            )
+            Text(
+                text = "Peak surf season ends (MM/DD)",
+                fontFamily = NeueMontrealMediumFontFamily,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .padding(start = 4.dp)
+            )
+        }
         OutlinedTextField(
             value = endSeason,
             onValueChange = { endSeason = it },
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp)
+                .padding(top = 10.dp, bottom = 10.dp)
         )
 
-        Text(
-            text = "Difficulty level",
-            fontFamily = NeueMontrealMediumFontFamily,
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 14.sp,
-            modifier = Modifier
-                .padding(top = 18.dp)
-        )
+        Row (verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(R.drawable.difficulty_star_darkblue_full_icon),
+                contentDescription = "Blue star icon",
+                modifier = Modifier.height(30.dp)
+            )
+            Text(
+                text = "Difficulty level",
+                fontFamily = NeueMontrealMediumFontFamily,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .padding(start = 4.dp)
+            )
+        }
         OutlinedTextField(
             value = waveDifficulty,
             onValueChange = { waveDifficulty = it },
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp)
+                .padding(top = 10.dp, bottom = 10.dp)
         )
 
-        Text(
-            text = "Tell us more about the surfing culture there",
-            fontFamily = NeueMontrealMediumFontFamily,
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 14.sp,
-            modifier = Modifier
-                .padding(top = 18.dp)
-        )
+        Row (verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(R.drawable.surfing_culture_blue_icon),
+                contentDescription = "Blue information icon",
+                modifier = Modifier.height(30.dp)
+            )
+            Text(
+                text = "Tell us more about the surfing culture there",
+                fontFamily = NeueMontrealMediumFontFamily,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .padding(start = 4.dp)
+            )
+        }
         OutlinedTextField(
             value = surfingCulture,
             onValueChange = { surfingCulture = it },
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp)
+                .padding(top = 10.dp, bottom = 10.dp)
         )
-        Text(
-            text = "Image URL",
-            fontFamily = NeueMontrealMediumFontFamily,
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 14.sp,
-            modifier = Modifier
-                .padding(top = 18.dp)
-        )
+
+        Row (verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(R.drawable.add_image_blue_icon),
+                contentDescription = "Blue picture icon",
+                modifier = Modifier.height(30.dp)
+            )
+            Text(
+                text = "Image URL",
+                fontFamily = NeueMontrealMediumFontFamily,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .padding(start = 4.dp)
+            )
+        }
         OutlinedTextField(
             value = imageUrl,
             onValueChange = { imageUrl = it },
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp)
+                .padding(top = 10.dp, bottom = 10.dp)
         )
-
 
         SubmitButton(
             modifier = Modifier
@@ -332,10 +381,10 @@ fun BottomNavBarAddSpot(modifier: Modifier = Modifier) {
             modifier = Modifier.weight(1f)
         )
         NavBarButtonAddSpot(
-            iconRes = R.drawable.add_spot_grey_icon,
+            iconRes = R.drawable.add_spot_blue_icon,
             text = "Add a spot",
             iconContentDescription = "Add a spot icon",
-            isActive = false,
+            isActive = true,
             onClick = {
                 val intent = Intent(context, NewSpotActivity::class.java)
                 context.startActivity(intent)
@@ -373,6 +422,14 @@ fun AddSpotHeaderPreview(){
 
 @Preview(showBackground = true)
 @Composable
+fun AddSpotNavBarPreview(){
+    WaveSeekersFrontTheme {
+        BottomNavBarAddSpot()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
 fun NewSpotPreview() {
     WaveSeekersFrontTheme {
         DisplayNewSpotForm()
@@ -381,8 +438,16 @@ fun NewSpotPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun SubmitButtonPreview(){
+fun AddSpotContentPreview(){
     WaveSeekersFrontTheme {
-        //SubmitButton()
+        AddSpotContent()
     }
 }
+
+/* @Preview(showBackground = true)
+@Composable
+fun SubmitButtonPreview(){
+    WaveSeekersFrontTheme {
+        SubmitButton()
+    }
+}*/
