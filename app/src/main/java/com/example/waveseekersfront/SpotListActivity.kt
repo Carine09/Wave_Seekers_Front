@@ -16,16 +16,28 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -34,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.waveseekersfront.ui.theme.NeueMontrealBoldFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
+import com.example.waveseekersfront.ui.theme.NeueMontrealRegularFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
 
 class SpotListActivity : ComponentActivity() {
@@ -70,6 +83,46 @@ fun HomeHeaderSection(modifier: Modifier = Modifier) {
             contentDescription = "Secondary wave seekers logo",
             modifier = Modifier
                 .padding(bottom = 8.dp)
+        )
+    }
+}
+
+@Composable
+fun SearchBar(modifier: Modifier = Modifier) {
+    var content by remember { mutableStateOf("") }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = modifier.fillMaxWidth()
+    ) {
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+        ),
+            value = content,
+            trailingIcon = {
+                Icon(imageVector = Icons.Default.Search,
+                    contentDescription = "Search Icon",
+                    tint = Color.Gray
+                ) },
+            onValueChange = { content = it },
+            singleLine = true,
+            label = {
+                Text("Looking for spots in a specific country?",
+                    fontFamily = NeueMontrealRegularFontFamily,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 12.sp
+                )
+            },
+            modifier = modifier
+                .fillMaxWidth()
         )
     }
 }
@@ -305,6 +358,7 @@ fun DisplaySpotList(modifier: Modifier = Modifier) {
                 .padding(24.dp)
         ) {
             HomeHeaderSection()
+            SearchBar()
             SpotListContent()
         }
         BottomNavBarHome()
