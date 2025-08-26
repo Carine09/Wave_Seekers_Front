@@ -39,10 +39,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
+import com.example.waveseekersfront.ui.theme.NeueMontrealRegularFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
 
 class NewSpotActivity : ComponentActivity() {
@@ -86,7 +88,7 @@ fun AddSpotHeaderSection(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DifficultyMenuDropDown() {
-    val list = listOf("Select the difficulty level","1 - Beginner - Gentle waves, safe conditions, perfect for learning", "2 - Novice - Small to medium waves, mostly forgiving breaks", "3 - Intermediate - Consistent waves, requires solid skills", "4 -  Advanced - Powerful waves, extensive experience needed", "5 - Expert Only - Massive dangerous waves, serious consequences")
+    val list = listOf("Select the difficulty level of this spot !","1 - Beginner - Gentle waves, safe conditions, perfect for learning", "2 - Novice - Small to medium waves, mostly forgiving breaks", "3 - Intermediate - Consistent waves, requires solid skills", "4 -  Advanced - Powerful waves, extensive experience needed", "5 - Expert Only - Massive dangerous waves, serious consequences")
     var isExpanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(list[0]) }
     Column (
@@ -120,7 +122,9 @@ fun DifficultyMenuDropDown() {
             ) {
                 list.forEachIndexed { index, text ->
                     DropdownMenuItem(
-                        text = { Text(text = text) },
+                        text = { Text(text = text,
+                            style = TextStyle(fontFamily = NeueMontrealRegularFontFamily, color = MaterialTheme.colorScheme.primary)
+                        ) },
                         onClick = {
                             selectedText = list[index]
                             isExpanded = false
@@ -224,7 +228,7 @@ fun AddSpotContent() {
                 .padding(top = 10.dp, bottom = 10.dp)
         )
 
-        Row (verticalAlignment = Alignment.CenterVertically) { //Padding top de 18.dp ici?
+        Row (verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(R.drawable.peak_season_blue_icon),
                 contentDescription = "Blue calendar icon",
