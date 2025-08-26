@@ -1,5 +1,6 @@
 package com.example.waveseekersfront
 
+
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,7 +10,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,50 +17,52 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.waveseekersfront.ui.theme.NeueMontrealBoldFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
 
-class SpotListActivity : ComponentActivity() {
+class LikedSpotsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             WaveSeekersFrontTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    DisplaySpotList(
-                        modifier = Modifier.padding(innerPadding),
-                    )
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    DisplayLikedSpots()
+
                 }
             }
         }
     }
 }
 
+/* -------------------HEADER--------------*/
+
+
 @Composable
-fun HomeHeaderSection(modifier: Modifier = Modifier) {
+fun LikedSpotsHeaderSection(modifier: Modifier = Modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier.fillMaxWidth()
     ) {
         Text(
-            text = "Find your wave",
+            text = "My Account",
             fontFamily = NeueMontrealMediumFontFamily,
             color = MaterialTheme.colorScheme.primary,
             fontSize = 20.sp
@@ -74,86 +76,15 @@ fun HomeHeaderSection(modifier: Modifier = Modifier) {
     }
 }
 
-@Composable
-fun SpotCard(
-    imageRes: Int,
-    spotName: String,
-    country: String,
-    imageContentDescription: String,
-    difficultyLevel: Int = 1,
-    onClick: () -> Unit = {},
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .clickable { onClick() }
-    ) {
-        Image(
-            painter = painterResource(imageRes),
-            contentDescription = imageContentDescription,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(140.dp)
-                .padding(top = 16.dp)
-                .clip(RoundedCornerShape(8.dp)),
-            contentScale = ContentScale.Crop
-        )
-        Row {
-            Text(
-                text = spotName,
-                fontFamily = NeueMontrealBoldFontFamily,
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 14.sp,
-                modifier = Modifier
-                    .padding(top = 8.dp)
-            )
-            Text(
-                text = " | $country",
-                fontFamily = NeueMontrealMediumFontFamily,
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 14.sp,
-                modifier = Modifier
-                    .padding(top = 8.dp)
-            )
-        }
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "Difficulty level :",
-                fontFamily = NeueMontrealMediumFontFamily,
-                color = MaterialTheme.colorScheme.secondary,
-                fontSize = 12.sp,
-                modifier = Modifier.padding(end = 4.dp)
-            )
 
-            repeat(5) { index ->
-                Image(
-                    painter = painterResource(
-                        if (index < difficultyLevel) {
-                            R.drawable.difficulty_star_lightblue_full_icon
-                        } else {
-                            R.drawable.difficulty_star_lightblue_outline_icon
-                        }
-                    ),
-                    contentDescription = if (index < difficultyLevel) {
-                        "Full difficulty star"
-                    } else {
-                        "Empty difficulty star"
-                    },
-                    modifier = Modifier.height(20.dp)
-                )
-            }
-        }
-    }
-}
-
+/*---------------------BODY---------------------------*/
 @Composable
-fun SpotListContent(modifier: Modifier = Modifier) {
+fun LikedSpotList(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     Column(
         modifier = modifier
+
     ) {
         SpotCard(
             imageRes = R.drawable.oahu_spot_picture,
@@ -171,27 +102,6 @@ fun SpotListContent(modifier: Modifier = Modifier) {
                     putExtra("PEAK_SEASON_START", "07-22")
                     putExtra("PEAK_SEASON_END", "08-31")
                     putExtra("GPS_COORDINATES", "21° 28′ 00″ N, 157° 59′ 00″ O")
-                    putExtra("SURFING_CULTURE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in lorem id est vulputate vehicula et vel odio. In hac habitasse platea dictumst. Nullam iaculis dignissim orci, id fringilla dolor mollis vel. In vitae convallis felis. Vivamus eget dui at tortor mattis dapibus. Sed congue tortor dolor. Nam leo quam, pellentesque at vulputate sed, lacinia ut erat. Vivamus rhoncus scelerisque eros, a sollicitudin ipsum commodo quis. Etiam porttitor purus nibh, eget euismod augue semper in.")
-                }
-                context.startActivity(intent)
-            }
-        )
-        SpotCard(
-            imageRes = R.drawable.skeletonbay_spot_picture,
-            spotName = "Skeleton Bay",
-            country = "Namibia",
-            imageContentDescription = "Skeleton Bay spot picture",
-            difficultyLevel = 5,
-            onClick = {
-                val intent = Intent(context, SpotDetailsActivity::class.java).apply {
-                    putExtra("SPOT_ID", "skeleton_bay")
-                    putExtra("SPOT_NAME", "Skeleton Bay")
-                    putExtra("COUNTRY", "Namibia")
-                    putExtra("IMAGE_RES", R.drawable.skeletonbay_spot_picture)
-                    putExtra("DIFFICULTY_LEVEL", 5)
-                    putExtra("PEAK_SEASON_START", "09-01")
-                    putExtra("PEAK_SEASON_END", "11-30")
-                    putExtra("GPS_COORDINATES", "22° 59′ 00″ S, 14° 30′ 00″ E")
                     putExtra("SURFING_CULTURE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in lorem id est vulputate vehicula et vel odio. In hac habitasse platea dictumst. Nullam iaculis dignissim orci, id fringilla dolor mollis vel. In vitae convallis felis. Vivamus eget dui at tortor mattis dapibus. Sed congue tortor dolor. Nam leo quam, pellentesque at vulputate sed, lacinia ut erat. Vivamus rhoncus scelerisque eros, a sollicitudin ipsum commodo quis. Etiam porttitor purus nibh, eget euismod augue semper in.")
                 }
                 context.startActivity(intent)
@@ -218,11 +128,34 @@ fun SpotListContent(modifier: Modifier = Modifier) {
                 context.startActivity(intent)
             }
         )
+
+    }
+}
+@Composable
+fun DisplayLikedSpots(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier.fillMaxSize()
+    ){
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp)
+        ) {
+            LikedSpotsHeaderSection()
+            ProfileInfoSeparator()
+            LikedSpotList()
+
+        }
+        LikedSpotsNavBar()
     }
 }
 
+
+/*---------------------NAVBAR-------------------------*/
+
 @Composable
-fun NavBarButtonHome(
+fun NavBarButtonLikedSpots(
     iconRes: Int,
     text: String,
     iconContentDescription: String,
@@ -250,8 +183,9 @@ fun NavBarButtonHome(
     }
 }
 
+
 @Composable
-fun BottomNavBarHome(modifier: Modifier = Modifier) {
+fun LikedSpotsNavBar(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     Row(
@@ -260,8 +194,8 @@ fun BottomNavBarHome(modifier: Modifier = Modifier) {
             .background(MaterialTheme.colorScheme.onSecondary)
             .padding(horizontal = 24.dp)
     ) {
-        NavBarButtonHome(
-            iconRes = R.drawable.account_grey_icon,
+        NavBarButtonLikedSpots(
+            iconRes = R.drawable.account_blue_icon,
             text = "Profile",
             iconContentDescription = "Profile icon",
             isActive = true,
@@ -272,15 +206,19 @@ fun BottomNavBarHome(modifier: Modifier = Modifier) {
             },
             modifier = Modifier.weight(1f)
         )
-        NavBarButtonHome(
-            iconRes = R.drawable.home_blue_icon,
+        NavBarButtonLikedSpots(
+            iconRes = R.drawable.home_grey_icon,
             text = "Home",
             iconContentDescription = "Home icon",
-            isActive = true,
+            isActive = false,
+            onClick = {
+                val intent = Intent(context, SpotListActivity::class.java)
+                context.startActivity(intent)
+            },
             modifier = Modifier.weight(1f)
         )
-        NavBarButtonHome(
-            iconRes = R.drawable.add_spot_grey_icon,
+        NavBarButtonLikedSpots(
+            iconRes = R.drawable.add_spot_blue_icon,
             text = "Add a spot",
             iconContentDescription = "Add a spot icon",
             isActive = false,
@@ -293,67 +231,29 @@ fun BottomNavBarHome(modifier: Modifier = Modifier) {
     }
 }
 
+/*---------------------PREVIEWS -------------------*/
+
+
+@Preview(showBackground = true)
 @Composable
-fun DisplaySpotList(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-                .padding(24.dp)
-        ) {
-            HomeHeaderSection()
-            SpotListContent()
-        }
-        BottomNavBarHome()
+fun LikedSpotsHeaderPreview() {
+    WaveSeekersFrontTheme {
+        LikedSpotsHeaderSection(modifier = Modifier.padding(32.dp))
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun HomeHeaderPreview() {
+fun LikedSpotsNavBarPreview(){
     WaveSeekersFrontTheme {
-        HomeHeaderSection(modifier = Modifier.padding(32.dp))
+        LikedSpotsNavBar()
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun SpotCardPreview() {
+fun DisplayLikedSpotsPreview() {
     WaveSeekersFrontTheme {
-        SpotCard(
-            imageRes = R.drawable.oahu_spot_picture,
-            spotName = "Oahu, Hawaii",
-            country = "United States of America",
-            imageContentDescription = "Oahu spot picture",
-            difficultyLevel = 4,
-            modifier = Modifier.padding(16.dp)
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SpotListContentPreview() {
-    WaveSeekersFrontTheme {
-        SpotListContent(modifier = Modifier.padding(32.dp))
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BottomNavBarPreview() {
-    WaveSeekersFrontTheme {
-        BottomNavBarHome(modifier = Modifier.padding(32.dp))
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SpotListPreview() {
-    WaveSeekersFrontTheme {
-        DisplaySpotList()
+        DisplayLikedSpots(modifier = Modifier.padding(32.dp))
     }
 }

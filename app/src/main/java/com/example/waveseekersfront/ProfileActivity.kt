@@ -19,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,7 +50,7 @@ class ProfileActivity : ComponentActivity() {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    //DisplayProfileInfo()
+                    DisplayProfileInfo()
 
                 }
             }
@@ -57,6 +59,8 @@ class ProfileActivity : ComponentActivity() {
 }
 
 /* -------------------HEADER--------------*/
+
+
 @Composable
 fun ProfileInfoHeaderSection(modifier: Modifier = Modifier) {
     Row(
@@ -78,16 +82,45 @@ fun ProfileInfoHeaderSection(modifier: Modifier = Modifier) {
         )
     }
 }
+
+
 /*---------------------BODY---------------------------*/
+
+@Composable
+fun DeleteAccountButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = { onClick() },
+        modifier = Modifier
+            .padding(start = 110.dp),
+        //horizontalAligment = Alignment.End
+        shape = RoundedCornerShape(5.dp),
+        //colors = ButtonDefaults.ButtonColors(containerColor = MaterialTheme.colorScheme.tertiary),
+
+        ) {
+        Text(
+            "Delete my account",
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.surface,
+
+            )
+    }
+}
 @Composable
 fun ChangeProfileInfo() {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
-
-
     val context = LocalContext.current
+
     Column {
+        Row() {
+            DeleteAccountButton() {
+            val intent = Intent(context, LoginActivity::class.java)
+            context.startActivity(intent)
+        }
+        }
         Text(
             text = "Email",
             fontFamily = NeueMontrealMediumFontFamily,
@@ -149,6 +182,7 @@ fun SaveChangesButton(
     }
 }
 
+
 @Composable
 fun DisplayProfileInfo(modifier: Modifier = Modifier) {
     Column(
@@ -161,11 +195,69 @@ fun DisplayProfileInfo(modifier: Modifier = Modifier) {
                 .padding(24.dp)
         ) {
             ProfileInfoHeaderSection()
+            ProfileInfoSeparator()
             ChangeProfileInfo()
         }
         ProfileInfoNavBar()
     }
 }
+
+//Horizontal buttons for changing pages in profile NOT WORKING.
+/*
+* @Composable
+fun ProfileInfoSeparator(
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val fieldWidth = 280.dp
+
+    Column() {
+        Row() {
+            TextButton(
+                onClick = {
+                    val intent = Intent(context, CreateAccountActivity::class.java)
+                    context.startActivity(intent)
+                },
+                modifier = modifier
+                    .width(fieldWidth)
+            ) {
+                Text(
+                    "Profile Info",
+                    fontFamily = NeueMontrealMediumFontFamily,
+                    color = MaterialTheme.colorScheme.secondary,
+                )
+
+                TextButton(
+                    onClick = {
+                        val intent = Intent(context, CreateAccountActivity::class.java)
+                        context.startActivity(intent)
+                    },
+                    modifier = modifier
+                        .width(fieldWidth)
+                ) {
+                    Text(
+                        "Liked Spots",
+                        fontFamily = NeueMontrealMediumFontFamily,
+                        color = MaterialTheme.colorScheme.secondary,
+                    )
+                    TextButton(
+                        onClick = {
+                            val intent = Intent(context, CreateAccountActivity::class.java)
+                            context.startActivity(intent)
+                        },
+                        modifier = modifier
+                            .width(fieldWidth)
+                    ) {
+                        Text(
+                            "Added Spots",
+                            fontFamily = NeueMontrealMediumFontFamily,
+                            color = MaterialTheme.colorScheme.secondary,
+                        )
+                    }
+                }
+            }
+
+}*/
 
 /*---------------------NAVBAR-------------------------*/
 
@@ -198,6 +290,7 @@ fun NavBarButtonProfileInfo(
     }
 }
 
+
 @Composable
 fun ProfileInfoNavBar(modifier: Modifier = Modifier) {
     val context = LocalContext.current
@@ -209,12 +302,12 @@ fun ProfileInfoNavBar(modifier: Modifier = Modifier) {
             .padding(horizontal = 24.dp)
     ) {
         NavBarButtonProfileInfo(
-            iconRes = R.drawable.logout_grey_icon, //A MODIFIER AVEC LA BONNE ICONE
+            iconRes = R.drawable.account_blue_icon,
             text = "Profile",
             iconContentDescription = "Profile icon",
             isActive = true,
             onClick = {
-                val intent = Intent(context, LoginActivity::class.java)
+                val intent = Intent(context, ProfileActivity::class.java)
                 context.startActivity(intent)
                 (context as? ComponentActivity)?.finish()
             },
