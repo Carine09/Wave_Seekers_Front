@@ -29,6 +29,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -169,14 +170,21 @@ fun AddSpotContent() {
 
             )
         }
-            OutlinedTextField(
+            OutlinedTextField(colors = TextFieldDefaults.colors(
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
                 value = spotName,
                 onValueChange = { spotName = it },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 10.dp, bottom = 10.dp)
-                    //padding bottom (pour remplacer le top du texte qui ne fonctonne pas)
+                    .padding(top = 10.dp, bottom = 10.dp),
 
             )
 
@@ -195,7 +203,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = country,
             onValueChange = { country = it },
             singleLine = true,
@@ -219,7 +235,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = gpsCoordinates,
             onValueChange = { gpsCoordinates = it },
             singleLine = true,
@@ -243,7 +267,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = startSeason,
             onValueChange = { startSeason = it },
             singleLine = true,
@@ -267,7 +299,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = endSeason,
             onValueChange = { endSeason = it },
             singleLine = true,
@@ -310,7 +350,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = surfingCulture,
             onValueChange = { surfingCulture = it },
             singleLine = true,
@@ -334,7 +382,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = imageUrl,
             onValueChange = { imageUrl = it },
             singleLine = true,

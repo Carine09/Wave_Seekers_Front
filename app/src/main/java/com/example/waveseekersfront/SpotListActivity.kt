@@ -46,56 +46,6 @@ import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealRegularFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
 
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun HomeHeaderPreview() {
-    WaveSeekersFrontTheme {
-        HomeHeaderSection(modifier = Modifier.padding(32.dp))
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SpotCardPreview() {
-    WaveSeekersFrontTheme {
-        SpotCard(
-            imageRes = R.drawable.oahu_spot_picture,
-            spotName = "Oahu, Hawaii",
-            country = "United States of America",
-            imageContentDescription = "Oahu spot picture",
-            difficultyLevel = 4,
-            modifier = Modifier.padding(16.dp)
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SpotListContentPreview() {
-    WaveSeekersFrontTheme {
-        DisplaySpotList(modifier = Modifier.padding(32.dp))
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BottomNavBarPreview() {
-    WaveSeekersFrontTheme {
-        BottomNavBarHome(modifier = Modifier.padding(32.dp))
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SpotListPreview() {
-    WaveSeekersFrontTheme {
-        DisplaySpotList()
-    }
-}
-
 data class Spot(
     val id: String,
     val imageRes: Int,
@@ -422,5 +372,52 @@ fun DisplaySpotList(modifier: Modifier = Modifier) {
             }
             BottomNavBarHome()
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeHeaderPreview() {
+    WaveSeekersFrontTheme {
+        HomeHeaderSection(modifier = Modifier.padding(32.dp))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SpotCardPreview() {
+    WaveSeekersFrontTheme {
+        SpotCard(
+            imageRes = R.drawable.oahu_spot_picture,
+            spotName = "Oahu, Hawaii",
+            country = "United States of America",
+            imageContentDescription = "Oahu spot picture",
+            difficultyLevel = 4,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SpotListContentPreview() {
+    WaveSeekersFrontTheme {
+        DisplaySpotList(modifier = Modifier.padding(32.dp))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BottomNavBarPreview() {
+    WaveSeekersFrontTheme {
+        BottomNavBarHome(modifier = Modifier.padding(32.dp))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SpotListPreview() {
+    WaveSeekersFrontTheme {
+        DisplaySpotList()
     }
 }
