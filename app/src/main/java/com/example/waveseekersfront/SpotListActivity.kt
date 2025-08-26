@@ -21,18 +21,21 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButtonDefaults.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,6 +44,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.isTraversalGroup
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,6 +54,108 @@ import com.example.waveseekersfront.ui.theme.NeueMontrealBoldFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealRegularFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
+
+
+
+
+@Preview(showBackground = true)
+@Composable
+fun HomeHeaderPreview() {
+    WaveSeekersFrontTheme {
+        HomeHeaderSection(modifier = Modifier.padding(32.dp))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SpotCardPreview() {
+    WaveSeekersFrontTheme {
+        SpotCard(
+            imageRes = R.drawable.oahu_spot_picture,
+            spotName = "Oahu, Hawaii",
+            country = "United States of America",
+            imageContentDescription = "Oahu spot picture",
+            difficultyLevel = 4,
+            modifier = Modifier.padding(16.dp)
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SpotListContentPreview() {
+    WaveSeekersFrontTheme {
+        DisplaySpotList(modifier = Modifier.padding(32.dp))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun BottomNavBarPreview() {
+    WaveSeekersFrontTheme {
+        BottomNavBarHome(modifier = Modifier.padding(32.dp))
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SpotListPreview() {
+    WaveSeekersFrontTheme {
+        DisplaySpotList()
+    }
+}
+
+data class Spot(
+    val id: String,
+    val imageRes: Int,
+    val spotName: String,
+    val country: String,
+    val imageContentDescription: String,
+    val difficultyLevel: Int,
+    val peakSeasonStart: String,
+    val peakSeasonEnd: String,
+    val gpsCoordinates: String,
+    val surfingCulture: String
+)
+
+val allSpots = listOf(
+    Spot(
+        id = "oahu",
+        imageRes = R.drawable.oahu_spot_picture,
+        spotName = "Oahu, Hawaii",
+        country = "United States of America",
+        imageContentDescription = "Oahu spot picture",
+        difficultyLevel = 4,
+        peakSeasonStart = "07-22",
+        peakSeasonEnd = "08-31",
+        gpsCoordinates = "21° 28′ 00″ N, 157° 59′ 00″ O",
+        surfingCulture = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in lorem id est vulputate vehicula et vel odio. In hac habitasse platea dictumst. Nullam iaculis dignissim orci, id fringilla dolor mollis vel. In vitae convallis felis. Vivamus eget dui at tortor mattis dapibus. Sed congue tortor dolor. Nam leo quam, pellentesque at vulputate sed, lacinia ut erat. Vivamus rhoncus scelerisque eros, a sollicitudin ipsum commodo quis. Etiam porttitor purus nibh, eget euismod augue semper in."
+    ),
+    Spot(
+        id = "skeleton_bay",
+        imageRes = R.drawable.skeletonbay_spot_picture,
+        spotName = "Skeleton Bay",
+        country = "Namibia",
+        imageContentDescription = "Skeleton Bay spot picture",
+        difficultyLevel = 5,
+        peakSeasonStart = "09-01",
+        peakSeasonEnd = "11-30",
+        gpsCoordinates = "22° 59′ 00″ S, 14° 30′ 00″ E",
+        surfingCulture = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in lorem id est vulputate vehicula et vel odio. In hac habitasse platea dictumst. Nullam iaculis dignissim orci, id fringilla dolor mollis vel. In vitae convallis felis. Vivamus eget dui at tortor mattis dapibus. Sed congue tortor dolor. Nam leo quam, pellentesque at vulputate sed, lacinia ut erat. Vivamus rhoncus scelerisque eros, a sollicitudin ipsum commodo quis. Etiam porttitor purus nibh, eget euismod augue semper in."
+    ),
+    Spot(
+        id = "superbank",
+        imageRes = R.drawable.superbank_spot_picture,
+        spotName = "Superbank, Gold Coast",
+        country = "Australia",
+        imageContentDescription = "Superbank spot picture",
+        difficultyLevel = 4,
+        peakSeasonStart = "11-28",
+        peakSeasonEnd = "02-01",
+        gpsCoordinates = "28° 10′ 00″ S, 153° 33′ 00″ E",
+        surfingCulture = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in lorem id est vulputate vehicula et vel odio. In hac habitasse platea dictumst. Nullam iaculis dignissim orci, id fringilla dolor mollis vel. In vitae convallis felis. Vivamus eget dui at tortor mattis dapibus. Sed congue tortor dolor. Nam leo quam, pellentesque at vulputate sed, lacinia ut erat. Vivamus rhoncus scelerisque eros, a sollicitudin ipsum commodo quis. Etiam porttitor purus nibh, eget euismod augue semper in."
+    )
+)
 
 class SpotListActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,9 +195,11 @@ fun HomeHeaderSection(modifier: Modifier = Modifier) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBar(modifier: Modifier = Modifier) {
-    var content by remember { mutableStateOf("") }
+fun ResearchBar(query: String,
+                onQueryChange: (String) -> Unit,
+                modifier: Modifier = Modifier) {
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -106,26 +216,27 @@ fun SearchBar(modifier: Modifier = Modifier) {
             focusedIndicatorColor = MaterialTheme.colorScheme.primary,
             unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
         ),
-            value = content,
             trailingIcon = {
                 Icon(imageVector = Icons.Default.Search,
                     contentDescription = "Search Icon",
                     tint = Color.Gray
                 ) },
-            onValueChange = { content = it },
+            value = query,
+            onValueChange = onQueryChange,
             singleLine = true,
             label = {
                 Text("Looking for spots in a specific country?",
                     fontFamily = NeueMontrealRegularFontFamily,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 12.sp
+                    color = MaterialTheme.colorScheme.primary
                 )
             },
             modifier = modifier
                 .fillMaxWidth()
         )
+
     }
 }
+
 
 @Composable
 fun SpotCard(
@@ -198,79 +309,6 @@ fun SpotCard(
                 )
             }
         }
-    }
-}
-
-@Composable
-fun SpotListContent(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-
-    Column(
-        modifier = modifier
-    ) {
-        SpotCard(
-            imageRes = R.drawable.oahu_spot_picture,
-            spotName = "Oahu, Hawaii",
-            country = "United States of America",
-            imageContentDescription = "Oahu spot picture",
-            difficultyLevel = 4,
-            onClick = {
-                val intent = Intent(context, SpotDetailsActivity::class.java).apply {
-                    putExtra("SPOT_ID", "oahu")
-                    putExtra("SPOT_NAME", "Oahu, Hawaii")
-                    putExtra("COUNTRY", "United States of America")
-                    putExtra("IMAGE_RES", R.drawable.oahu_spot_picture)
-                    putExtra("DIFFICULTY_LEVEL", 4)
-                    putExtra("PEAK_SEASON_START", "07-22")
-                    putExtra("PEAK_SEASON_END", "08-31")
-                    putExtra("GPS_COORDINATES", "21° 28′ 00″ N, 157° 59′ 00″ O")
-                    putExtra("SURFING_CULTURE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in lorem id est vulputate vehicula et vel odio. In hac habitasse platea dictumst. Nullam iaculis dignissim orci, id fringilla dolor mollis vel. In vitae convallis felis. Vivamus eget dui at tortor mattis dapibus. Sed congue tortor dolor. Nam leo quam, pellentesque at vulputate sed, lacinia ut erat. Vivamus rhoncus scelerisque eros, a sollicitudin ipsum commodo quis. Etiam porttitor purus nibh, eget euismod augue semper in.")
-                }
-                context.startActivity(intent)
-            }
-        )
-        SpotCard(
-            imageRes = R.drawable.skeletonbay_spot_picture,
-            spotName = "Skeleton Bay",
-            country = "Namibia",
-            imageContentDescription = "Skeleton Bay spot picture",
-            difficultyLevel = 5,
-            onClick = {
-                val intent = Intent(context, SpotDetailsActivity::class.java).apply {
-                    putExtra("SPOT_ID", "skeleton_bay")
-                    putExtra("SPOT_NAME", "Skeleton Bay")
-                    putExtra("COUNTRY", "Namibia")
-                    putExtra("IMAGE_RES", R.drawable.skeletonbay_spot_picture)
-                    putExtra("DIFFICULTY_LEVEL", 5)
-                    putExtra("PEAK_SEASON_START", "09-01")
-                    putExtra("PEAK_SEASON_END", "11-30")
-                    putExtra("GPS_COORDINATES", "22° 59′ 00″ S, 14° 30′ 00″ E")
-                    putExtra("SURFING_CULTURE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in lorem id est vulputate vehicula et vel odio. In hac habitasse platea dictumst. Nullam iaculis dignissim orci, id fringilla dolor mollis vel. In vitae convallis felis. Vivamus eget dui at tortor mattis dapibus. Sed congue tortor dolor. Nam leo quam, pellentesque at vulputate sed, lacinia ut erat. Vivamus rhoncus scelerisque eros, a sollicitudin ipsum commodo quis. Etiam porttitor purus nibh, eget euismod augue semper in.")
-                }
-                context.startActivity(intent)
-            }
-        )
-        SpotCard(
-            imageRes = R.drawable.superbank_spot_picture,
-            spotName = "Superbank, Gold Coast",
-            country = "Australia",
-            imageContentDescription = "Superbank spot picture",
-            difficultyLevel = 4,
-            onClick = {
-                val intent = Intent(context, SpotDetailsActivity::class.java).apply {
-                    putExtra("SPOT_ID", "superbank")
-                    putExtra("SPOT_NAME", "Superbank, Gold Coast")
-                    putExtra("COUNTRY", "Australia")
-                    putExtra("IMAGE_RES", R.drawable.superbank_spot_picture)
-                    putExtra("DIFFICULTY_LEVEL", 4)
-                    putExtra("PEAK_SEASON_START", "11-28")
-                    putExtra("PEAK_SEASON_END", "02-01")
-                    putExtra("GPS_COORDINATES", "28° 10′ 00″ S, 153° 33′ 00″ E")
-                    putExtra("SURFING_CULTURE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in lorem id est vulputate vehicula et vel odio. In hac habitasse platea dictumst. Nullam iaculis dignissim orci, id fringilla dolor mollis vel. In vitae convallis felis. Vivamus eget dui at tortor mattis dapibus. Sed congue tortor dolor. Nam leo quam, pellentesque at vulputate sed, lacinia ut erat. Vivamus rhoncus scelerisque eros, a sollicitudin ipsum commodo quis. Etiam porttitor purus nibh, eget euismod augue semper in.")
-                }
-                context.startActivity(intent)
-            }
-        )
     }
 }
 
@@ -348,6 +386,15 @@ fun BottomNavBarHome(modifier: Modifier = Modifier) {
 
 @Composable
 fun DisplaySpotList(modifier: Modifier = Modifier) {
+
+    var query by rememberSaveable { mutableStateOf("") }
+
+    val filteredSpots = allSpots.filter {
+        it.country.contains(query, ignoreCase = true)
+    }
+
+    val context = LocalContext.current
+
     Column(
         modifier = modifier.fillMaxSize()
     ) {
@@ -358,56 +405,33 @@ fun DisplaySpotList(modifier: Modifier = Modifier) {
                 .padding(24.dp)
         ) {
             HomeHeaderSection()
-            SearchBar()
-            SpotListContent()
+            ResearchBar(
+                query = query,
+                onQueryChange = { query = it })
+            filteredSpots.forEach { spot ->
+                SpotCard(
+                    imageRes = spot.imageRes,
+                    spotName = spot.spotName,
+                    country = spot.country,
+                    imageContentDescription = spot.imageContentDescription,
+                    difficultyLevel = spot.difficultyLevel,
+                    onClick = {
+                        val intent = Intent(context, SpotDetailsActivity::class.java).apply {
+                            putExtra("SPOT_ID", spot.id)
+                            putExtra("SPOT_NAME", spot.spotName)
+                            putExtra("COUNTRY", spot.country)
+                            putExtra("IMAGE_RES", spot.imageRes)
+                            putExtra("DIFFICULTY_LEVEL", spot.difficultyLevel)
+                            putExtra("PEAK_SEASON_START", spot.peakSeasonStart)
+                            putExtra("PEAK_SEASON_END", spot.peakSeasonEnd)
+                            putExtra("GPS_COORDINATES", spot.gpsCoordinates)
+                            putExtra("SURFING_CULTURE", spot.surfingCulture)
+                        }
+                        context.startActivity(intent)
+                    }
+                )
+            }
+            BottomNavBarHome()
         }
-        BottomNavBarHome()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeHeaderPreview() {
-    WaveSeekersFrontTheme {
-        HomeHeaderSection(modifier = Modifier.padding(32.dp))
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SpotCardPreview() {
-    WaveSeekersFrontTheme {
-        SpotCard(
-            imageRes = R.drawable.oahu_spot_picture,
-            spotName = "Oahu, Hawaii",
-            country = "United States of America",
-            imageContentDescription = "Oahu spot picture",
-            difficultyLevel = 4,
-            modifier = Modifier.padding(16.dp)
-        )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SpotListContentPreview() {
-    WaveSeekersFrontTheme {
-        SpotListContent(modifier = Modifier.padding(32.dp))
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BottomNavBarPreview() {
-    WaveSeekersFrontTheme {
-        BottomNavBarHome(modifier = Modifier.padding(32.dp))
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SpotListPreview() {
-    WaveSeekersFrontTheme {
-        DisplaySpotList()
     }
 }
