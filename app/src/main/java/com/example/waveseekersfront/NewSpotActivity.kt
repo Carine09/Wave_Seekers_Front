@@ -89,11 +89,10 @@ fun DifficultyMenuDropDown() {
     val list = listOf("Select the difficulty level","1 - Beginner - Gentle waves, safe conditions, perfect for learning", "2 - Novice - Small to medium waves, mostly forgiving breaks", "3 - Intermediate - Consistent waves, requires solid skills", "4 -  Advanced - Powerful waves, extensive experience needed", "5 - Expert Only - Massive dangerous waves, serious consequences")
     var isExpanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(list[0]) }
-// We want to react on tap/press on TextField to show menu
     Column (
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp),
+            .padding(vertical = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ){
         ExposedDropdownMenuBox(
@@ -106,17 +105,16 @@ fun DifficultyMenuDropDown() {
                 onValueChange = {},
                 readOnly = true,
                 colors = ExposedDropdownMenuDefaults.textFieldColors(
-                    focusedContainerColor = MaterialTheme.colorScheme.onPrimary,
+                    focusedContainerColor = MaterialTheme.colorScheme.onTertiary,
                     unfocusedContainerColor = MaterialTheme.colorScheme.onSecondary,
-                    focusedTextColor = MaterialTheme.colorScheme.onSecondary,
-                    unfocusedTextColor = MaterialTheme.colorScheme.onPrimary
+                    focusedTextColor = MaterialTheme.colorScheme.primary,
+                    unfocusedTextColor = MaterialTheme.colorScheme.primary
                 ),
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) }
             )
             ExposedDropdownMenu(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.onSecondary),
-
                 expanded = isExpanded,
                 onDismissRequest = { isExpanded = false }
             ) {
@@ -286,7 +284,7 @@ fun AddSpotContent() {
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
                 modifier = Modifier
-                    .padding(start = 4.dp)
+                    .padding(start = 4.dp, bottom = 10.dp)
             )
         }
         DifficultyMenuDropDown()
