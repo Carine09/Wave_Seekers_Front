@@ -20,6 +20,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -417,7 +418,9 @@ fun SubmitButton(
     Button(
         onClick = { onClick() },
         modifier = modifier,
-        shape = RoundedCornerShape(5.dp)) {
+        shape = RoundedCornerShape(5.dp),
+        colors= ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),)
+    {
         Text(
             "Submit",
             fontFamily = NeueMontrealMediumFontFamily,

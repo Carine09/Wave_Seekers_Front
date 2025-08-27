@@ -149,7 +149,7 @@ fun SpotDetailsCard(
             contentScale = ContentScale.Crop
         )
 
-        // Difficulty level - RIGHT ALIGNED
+        // Difficulty level
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.End,
