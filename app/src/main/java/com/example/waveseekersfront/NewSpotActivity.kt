@@ -28,6 +28,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -37,6 +38,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -196,14 +198,21 @@ fun AddSpotContent() {
 
             )
         }
-            OutlinedTextField(
+            OutlinedTextField(colors = TextFieldDefaults.colors(
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
                 value = spotName,
                 onValueChange = { spotName = it },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 10.dp, bottom = 10.dp)
-                    //padding bottom (pour remplacer le top du texte qui ne fonctonne pas)
+                    .padding(top = 10.dp, bottom = 10.dp),
 
             )
 
@@ -222,7 +231,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = country,
             onValueChange = { country = it },
             singleLine = true,
@@ -246,7 +263,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = gpsCoordinates,
             onValueChange = { gpsCoordinates = it },
             singleLine = true,
@@ -270,7 +295,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = startSeason,
             onValueChange = { startSeason = it },
             singleLine = true,
@@ -294,7 +327,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = endSeason,
             onValueChange = { endSeason = it },
             singleLine = true,
@@ -315,7 +356,7 @@ fun AddSpotContent() {
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
                 modifier = Modifier
-                    .padding(start = 4.dp, bottom = 10.dp)
+                    .padding(start = 4.dp)
             )
         }
         DifficultyMenuDropDown()
@@ -337,7 +378,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = surfingCulture,
             onValueChange = { surfingCulture = it },
             singleLine = true,
@@ -416,7 +465,9 @@ fun SubmitButton(
     Button(
         onClick = { onClick() },
         modifier = modifier,
-        shape = RoundedCornerShape(5.dp)) {
+        shape = RoundedCornerShape(5.dp),
+        colors= ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),)
+    {
         Text(
             "Submit",
             fontFamily = NeueMontrealMediumFontFamily,
@@ -466,12 +517,12 @@ fun BottomNavBarAddSpot(modifier: Modifier = Modifier) {
             .padding(horizontal = 24.dp)
     ) {
         NavBarButtonAddSpot(
-            iconRes = R.drawable.logout_grey_icon,
-            text = "Log out",
-            iconContentDescription = "Log out icon",
+            iconRes = R.drawable.account_grey_icon,
+            text = "Profile",
+            iconContentDescription = "Profile icon",
             isActive = false,
             onClick = {
-                val intent = Intent(context, LoginActivity::class.java)
+                val intent = Intent(context, ProfileActivity::class.java)
                 context.startActivity(intent)
                 (context as? ComponentActivity)?.finish()
             },
