@@ -377,12 +377,12 @@ fun BottomNavBarHome(modifier: Modifier = Modifier) {
             .padding(horizontal = 24.dp)
     ) {
         NavBarButtonHome(
-            iconRes = R.drawable.logout_grey_icon,
-            text = "Log out",
-            iconContentDescription = "Log out icon",
-            isActive = false,
+            iconRes = R.drawable.account_grey_icon,
+            text = "Profile",
+            iconContentDescription = "Profile icon",
+            isActive = true,
             onClick = {
-                val intent = Intent(context, LoginActivity::class.java)
+                val intent = Intent(context, ProfileActivity::class.java)
                 context.startActivity(intent)
                 (context as? ComponentActivity)?.finish()
             },
