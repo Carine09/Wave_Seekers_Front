@@ -17,7 +17,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -160,9 +163,42 @@ fun AddedSpotButton(onClick: () -> Unit) {
 }
 
 @Composable
+fun LogOutButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = { onClick() },
+        modifier = Modifier
+        //.padding(start = 110.dp)
+        ,
+        shape = RoundedCornerShape(5.dp),
+        colors= ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onTertiary),
+
+
+        ) {
+        Text(
+            "Log Out",
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.onPrimary,
+
+            )
+    }
+}
+@Composable
 fun ProfileInfoSeparator(){
     val context = LocalContext.current
     Column() {
+        Row(
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            LogOutButton() {
+                val intent = Intent(context, LoginActivity::class.java)
+                context.startActivity(intent)
+            }
+        }
         Row() {
             ProfileInfoButton(onClick = {
                 val intent = Intent(context, ProfileActivity::class.java)
@@ -292,6 +328,7 @@ fun ProfileInfoSeparatorPreview(){
         ProfileInfoSeparator()
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

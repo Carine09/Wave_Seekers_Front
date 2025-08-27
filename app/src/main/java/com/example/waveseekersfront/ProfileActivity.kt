@@ -19,6 +19,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -37,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
+import com.example.waveseekersfront.ui.theme.NeueMontrealRegularFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
 
 class ProfileActivity : ComponentActivity() {
@@ -91,22 +93,47 @@ fun DeleteAccountButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Button(
-        onClick = { onClick() },
-        modifier = Modifier
-            .padding(start = 110.dp),
-        //horizontalAligment = Alignment.End
-        shape = RoundedCornerShape(5.dp),
-        //colors = ButtonDefaults.ButtonColors(containerColor = MaterialTheme.colorScheme.tertiary),
+    Column () {
+        Row (
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.fillMaxWidth()
+        ){
 
-        ) {
-        Text(
-            "Delete my account",
-            fontFamily = NeueMontrealMediumFontFamily,
-            color = MaterialTheme.colorScheme.surface,
+            Button(
+                onClick = { onClick() },
+                modifier = Modifier,
+                shape = RoundedCornerShape(5.dp),
+                colors= ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
 
+                ) {
+                Text(
+                    "Delete my account",
+                    fontFamily = NeueMontrealMediumFontFamily,
+                    color = MaterialTheme.colorScheme.surface,
+
+                    )
+            }
+        }
+
+        Row(
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.fillMaxWidth()
+        ){
+            Text(
+                text = "Warning! This action is irreversible.",
+                fontFamily = NeueMontrealMediumFontFamily,
+                color = MaterialTheme.colorScheme.tertiary,
+                fontSize = 12.sp,
+                modifier = Modifier
+                    .padding(start = 4.dp)
             )
+        }
+
+
     }
+
 }
 @Composable
 fun ChangeProfileInfo() {
@@ -115,12 +142,6 @@ fun ChangeProfileInfo() {
     val context = LocalContext.current
 
     Column {
-        Row() {
-            DeleteAccountButton() {
-            val intent = Intent(context, LoginActivity::class.java)
-            context.startActivity(intent)
-        }
-        }
         Text(
             text = "Email",
             fontFamily = NeueMontrealMediumFontFamily,
@@ -162,6 +183,16 @@ fun ChangeProfileInfo() {
         ) {
             val intent = Intent(context, ProfileActivity::class.java)
             context.startActivity(intent)
+        }
+        Row(
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            DeleteAccountButton() {
+                val intent = Intent(context, LoginActivity::class.java)
+                context.startActivity(intent)
+            }
         }
     }
 }
