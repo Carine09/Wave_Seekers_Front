@@ -456,8 +456,8 @@ fun DisplaySpotList(modifier: Modifier = Modifier) {
                     }
                 )
             }
-            BottomNavBarHome()
         }
+        BottomNavBarHome()
     }
 }
 
