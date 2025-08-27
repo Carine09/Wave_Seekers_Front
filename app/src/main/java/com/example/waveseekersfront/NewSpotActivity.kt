@@ -1,6 +1,5 @@
 package com.example.waveseekersfront
 
-
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -100,9 +99,10 @@ fun AddSpotHeaderSection(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DifficultyMenuDropDown() {
-    val list = listOf("Select the difficulty level of this spot !","1 - Beginner - Gentle waves, safe conditions, perfect for learning", "2 - Novice - Small to medium waves, mostly forgiving breaks", "3 - Intermediate - Consistent waves, requires solid skills", "4 -  Advanced - Powerful waves, extensive experience needed", "5 - Expert Only - Massive dangerous waves, serious consequences")
+    val list = listOf("Select the difficulty level of this spot !","1 - Beginner - Gentle waves, safe conditions, perfect for learning", "2 - Novice - Small to medium waves, mostly forgiving breaks", "3 - Intermediate - Consistent waves, requires solid skills", "4 - Advanced - Powerful waves, extensive experience needed", "5 - Expert Only - Massive dangerous waves, serious consequences")
     var isExpanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(list[0]) }
+
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -134,9 +134,9 @@ fun DifficultyMenuDropDown() {
             ) {
                 list.forEachIndexed { index, text ->
                     DropdownMenuItem(
-                        text = { Text(text = text,
-                            style = TextStyle(fontFamily = NeueMontrealRegularFontFamily, color = MaterialTheme.colorScheme.primary)
-                        ) },
+                        text = {
+                            Text(text = text, style = TextStyle(fontFamily = NeueMontrealRegularFontFamily, color = MaterialTheme.colorScheme.primary))
+                        },
                         onClick = {
                             selectedText = list[index]
                             isExpanded = false
@@ -146,9 +146,8 @@ fun DifficultyMenuDropDown() {
                 }
             }
         }
-
-        }
     }
+}
 
 @Composable
 fun AddSpotContent() {
@@ -160,7 +159,6 @@ fun AddSpotContent() {
     var waveDifficulty by remember { mutableStateOf("") }
     var surfingCulture by remember { mutableStateOf("") }
     var imageUrl by remember { mutableStateOf("") }
-
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
@@ -178,8 +176,8 @@ fun AddSpotContent() {
         }
     )
 
-
     val context = LocalContext.current
+
     Column {
         Row (verticalAlignment = Alignment.CenterVertically) {
             Image(
@@ -187,7 +185,6 @@ fun AddSpotContent() {
                 contentDescription = "Blue wave icon",
                 modifier = Modifier.height(40.dp)
             )
-
             Text(
                 text = "Spot's name",
                 fontFamily = NeueMontrealMediumFontFamily,
@@ -195,26 +192,24 @@ fun AddSpotContent() {
                 fontSize = 14.sp,
                 modifier = Modifier
                     .padding(start = 4.dp)
-
             )
         }
-            OutlinedTextField(colors = TextFieldDefaults.colors(
-                cursorColor = MaterialTheme.colorScheme.primary,
-                focusedTextColor = MaterialTheme.colorScheme.primary,
-                unfocusedTextColor = MaterialTheme.colorScheme.primary,
-                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
-                value = spotName,
-                onValueChange = { spotName = it },
-                singleLine = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp, bottom = 10.dp),
-
-            )
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
+            value = spotName,
+            onValueChange = { spotName = it },
+            singleLine = true,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp, bottom = 10.dp),
+        )
 
         Row (verticalAlignment = Alignment.CenterVertically) {
             Image(
@@ -245,7 +240,8 @@ fun AddSpotContent() {
             singleLine = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp) //remplace le top
+                .padding(top = 10.dp, bottom = 10.dp)
+            //remplace le top
         )
 
         Row (verticalAlignment = Alignment.CenterVertically) {
@@ -361,8 +357,6 @@ fun AddSpotContent() {
         }
         DifficultyMenuDropDown()
 
-
-
         Row (verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(R.drawable.surfing_culture_blue_icon),
@@ -410,41 +404,41 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        LazyRow {
-            item {
-                Button(
-                    onClick = {
+
+        // Section modifiée - remplace le LazyRow par une Column
+        Column {
+            Button(
+                onClick = {
                     singlePhotoPickerLauncher.launch(
                         PickVisualMediaRequest(
                             ActivityResultContracts.PickVisualMedia.ImageOnly
                         )
                     )
                 },
-                            modifier = Modifier
-                                .padding(top = 10.dp)
-                                .fillMaxWidth(),
-                            shape = RoundedCornerShape(5.dp)
-
-                ) {
-                    Text(
-                        text = "Add from gallery",
-                        fontFamily = NeueMontrealMediumFontFamily,
-                        color = MaterialTheme.colorScheme.surface
-                        )
-                }
-                if (selectedImageUri != null) {
-                    Spacer(modifier = Modifier.height(10.dp))
-                    AsyncImage(
-                        model = selectedImageUri,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .fillMaxWidth(),
+                shape = RoundedCornerShape(5.dp)
+            ) {
+                Text(
+                    text = "Add from gallery",
+                    fontFamily = NeueMontrealMediumFontFamily,
+                    color = MaterialTheme.colorScheme.surface
+                )
             }
 
+            // Afficher l'image sélectionnée en dessous du bouton avec un padding de 16dp
+            if (selectedImageUri != null) {
+                AsyncImage(
+                    model = selectedImageUri,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp) // Padding de 16dp comme demandé
+                )
+            }
         }
-
 
         SubmitButton(
             modifier = Modifier
@@ -455,7 +449,6 @@ fun AddSpotContent() {
             context.startActivity(intent)
         }
     }
-
 }
 
 @Composable
@@ -466,13 +459,11 @@ fun SubmitButton(
         onClick = { onClick() },
         modifier = modifier,
         shape = RoundedCornerShape(5.dp),
-        colors= ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),)
-    {
+        colors= ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),) {
         Text(
             "Submit",
             fontFamily = NeueMontrealMediumFontFamily,
             color = MaterialTheme.colorScheme.surface,
-
         )
     }
 }
@@ -509,7 +500,6 @@ fun NavBarButtonAddSpot(
 @Composable
 fun BottomNavBarAddSpot(modifier: Modifier = Modifier) {
     val context = LocalContext.current
-
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -602,11 +592,3 @@ fun AddSpotContentPreview(){
         AddSpotContent()
     }
 }
-
-/* @Preview(showBackground = true)
-@Composable
-fun SubmitButtonPreview(){
-    WaveSeekersFrontTheme {
-        SubmitButton()
-    }
-}*/

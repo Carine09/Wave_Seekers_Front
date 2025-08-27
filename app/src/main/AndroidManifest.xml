@@ -50,9 +50,6 @@
             android:name=".ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".LikedSpotsActivity"
-            android:exported="false"/>
-        <activity
             android:name=".AddedSpotsActivity"
             android:exported="false"/>
     </application>
