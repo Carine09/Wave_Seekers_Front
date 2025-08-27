@@ -380,7 +380,7 @@ fun BottomNavBarHome(modifier: Modifier = Modifier) {
             iconRes = R.drawable.account_grey_icon,
             text = "Profile",
             iconContentDescription = "Profile icon",
-            isActive = true,
+            isActive = false,
             onClick = {
                 val intent = Intent(context, ProfileActivity::class.java)
                 context.startActivity(intent)

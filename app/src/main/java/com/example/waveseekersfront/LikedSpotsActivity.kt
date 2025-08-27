@@ -101,8 +101,8 @@ fun LikedSpotList(modifier: Modifier = Modifier) {
                     putExtra("DIFFICULTY_LEVEL", 4)
                     putExtra("PEAK_SEASON_START", "07-22")
                     putExtra("PEAK_SEASON_END", "08-31")
-                    putExtra("GPS_COORDINATES", "21° 28′ 00″ N, 157° 59′ 00″ O")
-                    putExtra("SURFING_CULTURE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in lorem id est vulputate vehicula et vel odio. In hac habitasse platea dictumst. Nullam iaculis dignissim orci, id fringilla dolor mollis vel. In vitae convallis felis. Vivamus eget dui at tortor mattis dapibus. Sed congue tortor dolor. Nam leo quam, pellentesque at vulputate sed, lacinia ut erat. Vivamus rhoncus scelerisque eros, a sollicitudin ipsum commodo quis. Etiam porttitor purus nibh, eget euismod augue semper in.")
+                    putExtra("GPS_COORDINATES", "21° 28′ 00″ N, 157° 59′ 00″ W")
+                    putExtra("SURFING_CULTURE", "Oahu's North Shore represents the spiritual birthplace of modern surfing, where ancient Polynesian chiefs rode waves as a sacred practice called he'e nalu over a thousand years ago. The Pipeline break, discovered in the 1960s, became the ultimate proving ground for professional surfers, with its perfect but deadly barrels claiming both legends and lives. Hawaiian surfers like Eddie Aikau and the Da Silva family established a culture of respect, courage, and deep ocean knowledge that influences surfing worldwide. The area hosts the world's most prestigious surfing competitions, including the Vans Triple Crown, where careers are made and broken each winter. Today, the North Shore maintains its position as surfing's most revered arena, where local Hawaiian values of aloha and respect for the ocean remain paramount.")
                 }
                 context.startActivity(intent)
             }
@@ -123,7 +123,7 @@ fun LikedSpotList(modifier: Modifier = Modifier) {
                     putExtra("PEAK_SEASON_START", "11-28")
                     putExtra("PEAK_SEASON_END", "02-01")
                     putExtra("GPS_COORDINATES", "28° 10′ 00″ S, 153° 33′ 00″ E")
-                    putExtra("SURFING_CULTURE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in lorem id est vulputate vehicula et vel odio. In hac habitasse platea dictumst. Nullam iaculis dignissim orci, id fringilla dolor mollis vel. In vitae convallis felis. Vivamus eget dui at tortor mattis dapibus. Sed congue tortor dolor. Nam leo quam, pellentesque at vulputate sed, lacinia ut erat. Vivamus rhoncus scelerisque eros, a sollicitudin ipsum commodo quis. Etiam porttitor purus nibh, eget euismod augue semper in.")
+                    putExtra("SURFING_CULTURE", "The Superbank was artificially created in the 1990s through a massive sand pumping project that transformed three separate breaks into one continuous 2-kilometer wave. This engineering feat revolutionized professional surfing by creating the world's most consistent high-performance wave, hosting the annual World Surf League Championship Tour event. Australian surfing culture thrives here, with local groms learning alongside world champions in a uniquely egalitarian lineup. The spot embodies Australia's progressive approach to wave riding, where technical innovation and competitive excellence drive the culture forward. Despite being man-made, the Superbank has produced more perfect 10-point rides in professional surfing than any other wave, cementing its status as a modern surfing marvel.")
                 }
                 context.startActivity(intent)
             }
