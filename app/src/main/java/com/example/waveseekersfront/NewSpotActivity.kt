@@ -2,20 +2,28 @@ package com.example.waveseekersfront
 
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -37,12 +45,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealRegularFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
@@ -148,6 +158,23 @@ fun AddSpotContent() {
     var waveDifficulty by remember { mutableStateOf("") }
     var surfingCulture by remember { mutableStateOf("") }
     var imageUrl by remember { mutableStateOf("") }
+
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri ->
+            selectedImageUri = uri;
+            // Callback is invoked after the user selects a media item or closes the
+            // photo picker.
+            // Add or modify code below to save image data in data base
+            if (uri != null) {
+                Log.d("PhotoPicker", "Selected URI: $uri")
+            } else {
+                Log.d("PhotoPicker", "No media selected")
+            }
+        }
+    )
 
 
     val context = LocalContext.current
@@ -326,7 +353,7 @@ fun AddSpotContent() {
                 modifier = Modifier.height(30.dp)
             )
             Text(
-                text = "Image URL",
+                text = "Spot's picture",
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
@@ -334,14 +361,41 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
-            value = imageUrl,
-            onValueChange = { imageUrl = it },
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp)
-        )
+        LazyRow {
+            item {
+                Button(
+                    onClick = {
+                    singlePhotoPickerLauncher.launch(
+                        PickVisualMediaRequest(
+                            ActivityResultContracts.PickVisualMedia.ImageOnly
+                        )
+                    )
+                },
+                            modifier = Modifier
+                                .padding(top = 10.dp)
+                                .fillMaxWidth(),
+                            shape = RoundedCornerShape(5.dp)
+
+                ) {
+                    Text(
+                        text = "Add from gallery",
+                        fontFamily = NeueMontrealMediumFontFamily,
+                        color = MaterialTheme.colorScheme.surface
+                        )
+                }
+                if (selectedImageUri != null) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    AsyncImage(
+                        model = selectedImageUri,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+
+        }
+
 
         SubmitButton(
             modifier = Modifier
@@ -352,6 +406,7 @@ fun AddSpotContent() {
             context.startActivity(intent)
         }
     }
+
 }
 
 @Composable
