@@ -8,6 +8,10 @@
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Chock\.android\avd\Pixel_9.avd" />
+        <DropdownSelection timestamp="2025-08-27T08:53:35.253309700Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\delph\.android\avd\Medium_Phone.avd" />
             </handle>
           </Target>
         </DropdownSelection>

@@ -96,15 +96,15 @@ fun AddedSpotList(modifier: Modifier = Modifier) {
             difficultyLevel = 4,
             onClick = {
                 val intent = Intent(context, SpotDetailsActivity::class.java).apply {
-                    putExtra("SPOT_ID", "superbank")
-                    putExtra("SPOT_NAME", "Superbank, Gold Coast")
-                    putExtra("COUNTRY", "Australia")
-                    putExtra("IMAGE_RES", R.drawable.superbank_spot_picture)
-                    putExtra("DIFFICULTY_LEVEL", 4)
-                    putExtra("PEAK_SEASON_START", "11-28")
-                    putExtra("PEAK_SEASON_END", "02-01")
-                    putExtra("GPS_COORDINATES", "28° 10′ 00″ S, 153° 33′ 00″ E")
-                    putExtra("SURFING_CULTURE", "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc in lorem id est vulputate vehicula et vel odio. In hac habitasse platea dictumst. Nullam iaculis dignissim orci, id fringilla dolor mollis vel. In vitae convallis felis. Vivamus eget dui at tortor mattis dapibus. Sed congue tortor dolor. Nam leo quam, pellentesque at vulputate sed, lacinia ut erat. Vivamus rhoncus scelerisque eros, a sollicitudin ipsum commodo quis. Etiam porttitor purus nibh, eget euismod augue semper in.")
+                    putExtra("SPOT_ID", "manubay")
+                    putExtra("SPOT_NAME", "Manu Bay, Raglan")
+                    putExtra("COUNTRY", "New Zealand")
+                    putExtra("IMAGE_RES", R.drawable.manubay_spot_picture)
+                    putExtra("DIFFICULTY_LEVEL", 2)
+                    putExtra("PEAK_SEASON_START", "12-01")
+                    putExtra("PEAK_SEASON_END", "01-31")
+                    putExtra("GPS_COORDINATES", "37° 39′ 00″ S, 174° 45′ 00″ E")
+                    putExtra("SURFING_CULTURE", "Manu Bay gained international fame after featuring in the 1966 surf film The Endless Summer, introducing the world to New Zealand's pristine left-hand point break. The wave breaks consistently along a rocky coastline near Raglan, creating long, workable walls perfect for traditional longboard surfing and modern shortboard performance. New Zealand's surfing culture at Manu Bay reflects the country's laid-back, environmentally conscious ethos, with strong emphasis on preserving the natural coastline. Local Maori connections to the ocean add cultural depth to the surfing experience, respecting indigenous relationships with the sea. The spot remains relatively uncrowded compared to other world-class breaks, maintaining its appeal as a peaceful surfing sanctuary in the Southern Hemisphere.")
                 }
                 context.startActivity(intent)
             }

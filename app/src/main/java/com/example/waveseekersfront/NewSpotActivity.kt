@@ -2,24 +2,33 @@ package com.example.waveseekersfront
 
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -29,6 +38,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,12 +47,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealRegularFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
@@ -149,6 +161,23 @@ fun AddSpotContent() {
     var surfingCulture by remember { mutableStateOf("") }
     var imageUrl by remember { mutableStateOf("") }
 
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+
+    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri ->
+            selectedImageUri = uri;
+            // Callback is invoked after the user selects a media item or closes the
+            // photo picker.
+            // Add or modify code below to save image data in data base
+            if (uri != null) {
+                Log.d("PhotoPicker", "Selected URI: $uri")
+            } else {
+                Log.d("PhotoPicker", "No media selected")
+            }
+        }
+    )
+
 
     val context = LocalContext.current
     Column {
@@ -169,14 +198,21 @@ fun AddSpotContent() {
 
             )
         }
-            OutlinedTextField(
+            OutlinedTextField(colors = TextFieldDefaults.colors(
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
                 value = spotName,
                 onValueChange = { spotName = it },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 10.dp, bottom = 10.dp)
-                    //padding bottom (pour remplacer le top du texte qui ne fonctonne pas)
+                    .padding(top = 10.dp, bottom = 10.dp),
 
             )
 
@@ -195,7 +231,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = country,
             onValueChange = { country = it },
             singleLine = true,
@@ -219,7 +263,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = gpsCoordinates,
             onValueChange = { gpsCoordinates = it },
             singleLine = true,
@@ -243,7 +295,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = startSeason,
             onValueChange = { startSeason = it },
             singleLine = true,
@@ -267,7 +327,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = endSeason,
             onValueChange = { endSeason = it },
             singleLine = true,
@@ -288,7 +356,7 @@ fun AddSpotContent() {
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
                 modifier = Modifier
-                    .padding(start = 4.dp, bottom = 10.dp)
+                    .padding(start = 4.dp)
             )
         }
         DifficultyMenuDropDown()
@@ -310,7 +378,15 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
+        OutlinedTextField(colors = TextFieldDefaults.colors(
+            cursorColor = MaterialTheme.colorScheme.primary,
+            focusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedTextColor = MaterialTheme.colorScheme.primary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
             value = surfingCulture,
             onValueChange = { surfingCulture = it },
             singleLine = true,
@@ -326,7 +402,7 @@ fun AddSpotContent() {
                 modifier = Modifier.height(30.dp)
             )
             Text(
-                text = "Image URL",
+                text = "Spot's picture",
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
@@ -334,14 +410,41 @@ fun AddSpotContent() {
                     .padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
-            value = imageUrl,
-            onValueChange = { imageUrl = it },
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp)
-        )
+        LazyRow {
+            item {
+                Button(
+                    onClick = {
+                    singlePhotoPickerLauncher.launch(
+                        PickVisualMediaRequest(
+                            ActivityResultContracts.PickVisualMedia.ImageOnly
+                        )
+                    )
+                },
+                            modifier = Modifier
+                                .padding(top = 10.dp)
+                                .fillMaxWidth(),
+                            shape = RoundedCornerShape(5.dp)
+
+                ) {
+                    Text(
+                        text = "Add from gallery",
+                        fontFamily = NeueMontrealMediumFontFamily,
+                        color = MaterialTheme.colorScheme.surface
+                        )
+                }
+                if (selectedImageUri != null) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    AsyncImage(
+                        model = selectedImageUri,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+
+        }
+
 
         SubmitButton(
             modifier = Modifier
@@ -352,6 +455,7 @@ fun AddSpotContent() {
             context.startActivity(intent)
         }
     }
+
 }
 
 @Composable
@@ -361,7 +465,9 @@ fun SubmitButton(
     Button(
         onClick = { onClick() },
         modifier = modifier,
-        shape = RoundedCornerShape(5.dp)) {
+        shape = RoundedCornerShape(5.dp),
+        colors= ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),)
+    {
         Text(
             "Submit",
             fontFamily = NeueMontrealMediumFontFamily,
@@ -411,12 +517,12 @@ fun BottomNavBarAddSpot(modifier: Modifier = Modifier) {
             .padding(horizontal = 24.dp)
     ) {
         NavBarButtonAddSpot(
-            iconRes = R.drawable.logout_grey_icon,
-            text = "Log out",
-            iconContentDescription = "Log out icon",
+            iconRes = R.drawable.account_grey_icon,
+            text = "Profile",
+            iconContentDescription = "Profile icon",
             isActive = false,
             onClick = {
-                val intent = Intent(context, LoginActivity::class.java)
+                val intent = Intent(context, ProfileActivity::class.java)
                 context.startActivity(intent)
                 (context as? ComponentActivity)?.finish()
             },
