@@ -4,6 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
+        <DropdownSelection timestamp="2025-08-27T13:05:31.795933400Z">
+          <Target type="DEFAULT_BOOT">
+            <handle>
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\Chock\.android\avd\Pixel_9.avd" />
         <DropdownSelection timestamp="2025-08-27T08:53:35.253309700Z">
           <Target type="DEFAULT_BOOT">
             <handle>

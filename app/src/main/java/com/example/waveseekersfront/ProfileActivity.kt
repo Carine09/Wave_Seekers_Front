@@ -23,6 +23,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,6 +38,7 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.waveseekersfront.ui.theme.NeueMontrealBoldFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealRegularFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
@@ -47,13 +49,10 @@ class ProfileActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             WaveSeekersFrontTheme {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    DisplayProfileInfo()
-
+                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    DisplayProfileInfo(
+                        modifier = Modifier.padding(innerPadding),
+                    )
                 }
             }
         }
@@ -93,23 +92,26 @@ fun DeleteAccountButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Column () {
+    Column (modifier = Modifier
+        .padding(top = 150.dp)
+    ) {
         Row (
             verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.End,
+            horizontalArrangement = Arrangement.Start,
             modifier = Modifier.fillMaxWidth()
         ){
 
             Button(
                 onClick = { onClick() },
-                modifier = Modifier,
+                modifier = Modifier
+                    .padding(vertical = 5.dp),
                 shape = RoundedCornerShape(5.dp),
                 colors= ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
 
                 ) {
                 Text(
                     "Delete my account",
-                    fontFamily = NeueMontrealMediumFontFamily,
+                    fontFamily = NeueMontrealBoldFontFamily,
                     color = MaterialTheme.colorScheme.surface,
 
                     )
@@ -118,7 +120,7 @@ fun DeleteAccountButton(
 
         Row(
             verticalAlignment = Alignment.Bottom,
-            horizontalArrangement = Arrangement.End,
+            horizontalArrangement = Arrangement.Start,
             modifier = Modifier.fillMaxWidth()
         ){
             Text(
@@ -213,6 +215,68 @@ fun SaveChangesButton(
     }
 }
 
+
+@Composable
+fun LogOutButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Button(
+        onClick = { onClick() },
+        modifier = Modifier
+            .padding(vertical = 10.dp),
+        shape = RoundedCornerShape(5.dp),
+        colors= ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onTertiary),
+    ) {
+        Text(
+            "Log Out",
+            fontFamily = NeueMontrealMediumFontFamily,
+            color = MaterialTheme.colorScheme.onPrimary,
+        )
+    }
+}
+
+@Composable
+fun ProfileInfoSeparator(){
+    val context = LocalContext.current
+    Column() {
+        Row(
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.End,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            LogOutButton() {
+                val intent = Intent(context, LoginActivity::class.java)
+                context.startActivity(intent)
+            }
+        }
+        Row(modifier = Modifier
+            .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+
+        ) {
+            ProfileInfoButton(onClick = {
+                val intent = Intent(context, ProfileActivity::class.java)
+                context.startActivity(intent)
+
+            })
+            LikedSpotButton(onClick = {
+                val intent = Intent(context, LikedSpotsActivity::class.java)
+                context.startActivity(intent)
+
+            })
+            AddedSpotButton(onClick = {
+                val intent = Intent(context, AddedSpotsActivity::class.java)
+                context.startActivity(intent)
+                (context as? ComponentActivity)?.finish()
+            })
+        }
+        HorizontalDivider(
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+    }
+}
 
 @Composable
 fun DisplayProfileInfo(modifier: Modifier = Modifier) {
