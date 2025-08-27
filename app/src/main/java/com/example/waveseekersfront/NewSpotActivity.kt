@@ -329,7 +329,7 @@ fun AddSpotContent() {
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
                 modifier = Modifier
-                    .padding(start = 4.dp, bottom = 10.dp)
+                    .padding(start = 4.dp)
             )
         }
         DifficultyMenuDropDown()
