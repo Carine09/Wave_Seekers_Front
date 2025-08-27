@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -602,11 +603,3 @@ fun AddSpotContentPreview(){
         AddSpotContent()
     }
 }
-
-/* @Preview(showBackground = true)
-@Composable
-fun SubmitButtonPreview(){
-    WaveSeekersFrontTheme {
-        SubmitButton()
-    }
-}*/

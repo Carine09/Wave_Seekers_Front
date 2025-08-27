@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -19,6 +20,8 @@ import androidx.compose.ui.unit.sp
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
 import kotlinx.coroutines.delay
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +42,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun LoadingScreen(onLoadingFinished: () -> Unit) {
     LaunchedEffect(Unit) {
-        delay(2000)
+        delay(5000)
         onLoadingFinished()
     }
 
@@ -64,9 +67,33 @@ fun LoadingScreen(onLoadingFinished: () -> Unit) {
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 16.sp
             )
+            GifImage(modifier = Modifier.size(100.dp))
         }
     }
 }
+
+@Composable
+fun GifImage(modifier: Modifier = Modifier) {
+    val context = LocalContext.current
+
+
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(context)
+            .data(R.drawable.loading_gif)
+            .decoderFactory { result, options, _ ->
+                coil.decode.ImageDecoderDecoder(result.source, options)
+            }
+            .build()
+    )
+
+
+    Image(
+        painter = painter,
+        contentDescription = "Animated GIF",
+        modifier = modifier
+    )
+}
+
 
 @Preview(showBackground = true)
 @Composable

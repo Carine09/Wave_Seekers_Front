@@ -25,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -93,7 +94,7 @@ fun DeleteAccountButton(
     onClick: () -> Unit
 ) {
     Column (modifier = Modifier
-        .padding(top = 150.dp)
+        .padding(top = 100.dp)
     ) {
         Row (
             verticalAlignment = Alignment.Bottom,
@@ -150,7 +151,7 @@ fun ChangeProfileInfo() {
             color = MaterialTheme.colorScheme.primary,
             fontSize = 14.sp,
             modifier = Modifier
-                .padding(start = 4.dp)
+                .padding(start = 4.dp, top = 16.dp)
         )
         OutlinedTextField(
             value = email,
@@ -229,9 +230,42 @@ fun LogOutButton(
         colors= ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onTertiary),
     ) {
         Text(
-            "Log Out",
+            "Log out",
             fontFamily = NeueMontrealMediumFontFamily,
             color = MaterialTheme.colorScheme.onPrimary,
+        )
+    }
+}
+
+@Composable
+fun ProfileInfoButton(onClick: () -> Unit) {
+    TextButton(
+        onClick = { onClick() }
+    ) {
+        Text("Profile info",
+            fontFamily = NeueMontrealMediumFontFamily,
+        )
+    }
+}
+
+@Composable
+fun LikedSpotButton(onClick: () -> Unit) {
+    TextButton(
+        onClick = { onClick() }
+    ) {
+        Text("Liked Spots",
+            fontFamily = NeueMontrealMediumFontFamily,
+        )
+    }
+}
+
+@Composable
+fun AddedSpotButton(onClick: () -> Unit) {
+    TextButton(
+        onClick = { onClick() }
+    ) {
+        Text("Added Spots",
+            fontFamily = NeueMontrealMediumFontFamily,
         )
     }
 }
@@ -297,62 +331,6 @@ fun DisplayProfileInfo(modifier: Modifier = Modifier) {
     }
 }
 
-//Horizontal buttons for changing pages in profile NOT WORKING.
-/*
-* @Composable
-fun ProfileInfoSeparator(
-    modifier: Modifier = Modifier
-) {
-    val context = LocalContext.current
-    val fieldWidth = 280.dp
-
-    Column() {
-        Row() {
-            TextButton(
-                onClick = {
-                    val intent = Intent(context, CreateAccountActivity::class.java)
-                    context.startActivity(intent)
-                },
-                modifier = modifier
-                    .width(fieldWidth)
-            ) {
-                Text(
-                    "Profile Info",
-                    fontFamily = NeueMontrealMediumFontFamily,
-                    color = MaterialTheme.colorScheme.secondary,
-                )
-
-                TextButton(
-                    onClick = {
-                        val intent = Intent(context, CreateAccountActivity::class.java)
-                        context.startActivity(intent)
-                    },
-                    modifier = modifier
-                        .width(fieldWidth)
-                ) {
-                    Text(
-                        "Liked Spots",
-                        fontFamily = NeueMontrealMediumFontFamily,
-                        color = MaterialTheme.colorScheme.secondary,
-                    )
-                    TextButton(
-                        onClick = {
-                            val intent = Intent(context, CreateAccountActivity::class.java)
-                            context.startActivity(intent)
-                        },
-                        modifier = modifier
-                            .width(fieldWidth)
-                    ) {
-                        Text(
-                            "Added Spots",
-                            fontFamily = NeueMontrealMediumFontFamily,
-                            color = MaterialTheme.colorScheme.secondary,
-                        )
-                    }
-                }
-            }
-
-}*/
 
 /*---------------------NAVBAR-------------------------*/
 

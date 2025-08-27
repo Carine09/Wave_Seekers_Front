@@ -89,11 +89,11 @@ fun AddedSpotList(modifier: Modifier = Modifier) {
 
     ) {
         SpotCard(
-            imageRes = R.drawable.superbank_spot_picture,
-            spotName = "Superbank, Gold Coast",
-            country = "Australia",
-            imageContentDescription = "Superbank spot picture",
-            difficultyLevel = 4,
+            imageRes = R.drawable.manubay_spot_picture,
+            spotName = "Manu Bay, Raglan",
+            country = "New Zealand",
+            imageContentDescription = "Manubay spot picture",
+            difficultyLevel = 2,
             onClick = {
                 val intent = Intent(context, SpotDetailsActivity::class.java).apply {
                     putExtra("SPOT_ID", "manubay")
@@ -125,41 +125,10 @@ fun DisplayAddedSpots(modifier: Modifier = Modifier) {
         ) {
             AddedSpotsHeaderSection()
             ProfileInfoSeparator()
-            HorizontalDivider()
             AddedSpotList()
 
         }
         AddedSpotsNavBar()
-    }
-}
-
-@Composable
-fun ProfileInfoButton(onClick: () -> Unit) {
-    TextButton(
-        onClick = { onClick() }
-    ) {
-        Text("Profile info")
-    }
-}
-
-@Composable
-fun LikedSpotButton(onClick: () -> Unit) {
-    TextButton(
-        onClick = { onClick() }
-    ) {
-        Text("Liked Spots",
-            fontFamily = NeueMontrealMediumFontFamily,
-            //color = if (isActive) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onPrimary,
-        )
-    }
-}
-
-@Composable
-fun AddedSpotButton(onClick: () -> Unit) {
-    TextButton(
-        onClick = { onClick() }
-    ) {
-        Text("Added Spots")
     }
 }
 
