@@ -2,6 +2,7 @@ package com.example.waveseekersfront
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -22,6 +23,8 @@ import coil.request.ImageRequest
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,9 +42,21 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun LoadingScreen(onLoadingFinished: () -> Unit) {
+
     LaunchedEffect(Unit) {
+        try {
+            val message = withContext(kotlinx.coroutines.Dispatchers.IO) {
+                ApiService.fetchHelloMessage()
+            }
+            // Affiche dans le logcat
+            Log.d("API_TEST", "Message reçu du back: $message")
+        } catch (e: Exception) {
+            Log.e("API_TEST", "Erreur lors de la récupération du message", e)
+        }
+
         delay(2000)
         onLoadingFinished()
     }
