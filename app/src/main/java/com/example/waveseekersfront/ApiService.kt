@@ -12,7 +12,7 @@ import java.io.IOException
 
 interface ApiService {
     companion object {
-        private const val BASE_URL = "https://10.0.2.2:8080/"
+        private const val BASE_URL = "https://10.0.2.2:8443/"
 
         fun fetchHelloMessage(): String? {
             val client = getUnsafeOkHttpClient() // OK maintenant
@@ -33,7 +33,7 @@ interface ApiService {
                 override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
             })
 
-            val sslContext = SSLContext.getInstance("TLS") // plutôt que "SSL"
+            val sslContext = SSLContext.getInstance("SSL")
             sslContext.init(null, trustAllCerts, SecureRandom())
 
             return OkHttpClient.Builder()
