@@ -45,7 +45,78 @@ import com.example.waveseekersfront.ui.theme.NeueMontrealBoldFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealRegularFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import android.util.Log
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.layout.Box
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 
+/* TBD : refactoring : to be moved in a Spot.kt file */
+
+// API data classes
+data class ApiSpot(
+    val id: Int,
+    val user_id: Int,
+    val country_id: Int,
+    val destination: String,
+    val location: String,
+    val lat: Double,
+    val long: Double,
+    val peak_season_start: String,
+    val peak_season_end: String,
+    val difficulty_level: Int,
+    val surfing_culture: String,
+    val image_url: String
+)
+
+data class ApiCountry(
+    val id: Int,
+    val name: String
+)
+
+// Dynamic converter function
+fun ApiSpot.toUiSpot(countries: List<ApiCountry>): Spot {
+    return Spot(
+        id = this.id.toString(),
+        imageRes = getImageResourceForDestination(this.destination),
+        spotName = "${this.destination}, ${this.location}",
+        country = getCountryNameFromId(this.country_id, countries),
+        imageContentDescription = "${this.destination} spot picture",
+        difficultyLevel = this.difficulty_level,
+        peakSeasonStart = this.peak_season_start,
+        peakSeasonEnd = this.peak_season_end,
+        gpsCoordinates = "${this.lat}, ${this.long}",
+        surfingCulture = this.surfing_culture
+    )
+}
+
+// Dynamic country mapping
+private fun getCountryNameFromId(countryId: Int, countries: List<ApiCountry>): String {
+    return countries.find { it.id == countryId }?.name ?: "Unknown"
+}
+
+// Image mapping (fallback to default for new spots)
+private fun getImageResourceForDestination(destination: String): Int {
+    return when (destination.lowercase()) {
+        "oahu north shore" -> R.drawable.oahu_spot_picture
+        "skeleton bay" -> R.drawable.skeletonbay_spot_picture
+        "superbank" -> R.drawable.superbank_spot_picture
+        "manu bay" -> R.drawable.manubay_spot_picture
+        "playa chicama" -> R.drawable.chicama_spot_picture
+        "the bubble" -> R.drawable.thebubble_spot_picture
+        "pasta point" -> R.drawable.pastapoint_spot_picture
+        "supertubes beach" -> R.drawable.jeffreysbay_spot_picture
+        "kitty hawk" -> R.drawable.kittyhawk_spot_picture
+        "rockaway beach" -> R.drawable.rockaway_spot_picture
+        else -> R.drawable.oahu_spot_picture // Default image for new spots
+    }
+}
+
+/* END ! refactoring : to be moved in a Spot.kt file */
 data class Spot(
     val id: String,
     val imageRes: Int,
@@ -59,7 +130,7 @@ data class Spot(
     val surfingCulture: String
 )
 
-val allSpots = listOf(
+/*val allSpots = listOf(
     Spot(
         id = "oahu",
         imageRes = R.drawable.oahu_spot_picture,
@@ -180,7 +251,7 @@ val allSpots = listOf(
         gpsCoordinates = "45° 37′ 00″ N, 123° 57′ 00″ W",
         surfingCulture = "Rockaway Beach represents the rugged character of Pacific Northwest surfing, where cold water and powerful waves demand respect and proper equipment. The surf culture here emerged in the 1960s despite frigid water temperatures requiring full wetsuits year-round, attracting dedicated surfers seeking uncrowded waves. Oregon's environmental consciousness influences the local surf community, with strong emphasis on beach cleanups and ocean conservation efforts. The consistent but challenging conditions create skilled surfers who can handle powerful waves in adverse weather conditions. Rockaway's surf culture embodies the Pacific Northwest's independent spirit, where surfers value solitude and connection with raw nature over tropical perfection."
     )
-)
+)*/
 
 
 class SpotListActivity : ComponentActivity() {
@@ -411,14 +482,41 @@ fun BottomNavBarHome(modifier: Modifier = Modifier) {
 
 @Composable
 fun DisplaySpotList(modifier: Modifier = Modifier) {
-
     var query by rememberSaveable { mutableStateOf("") }
-
-    val filteredSpots = allSpots.filter {
-        it.country.contains(query, ignoreCase = true)
-    }
+    var spots by remember { mutableStateOf<List<Spot>>(emptyList()) }
+    var isLoading by remember { mutableStateOf(true) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
     val context = LocalContext.current
+
+    // Fetch both spots and countries from API
+    LaunchedEffect(Unit) {
+        try {
+            val (apiSpots, apiCountries) = withContext(Dispatchers.IO) {
+                val spots = ApiService.fetchSpotList()
+                val countries = ApiService.fetchCountries()
+                Pair(spots, countries)
+            }
+
+            if (apiSpots != null && apiCountries != null) {
+                spots = apiSpots.map { it.toUiSpot(apiCountries) }
+                Log.d("API_SUCCESS", "Loaded ${spots.size} spots and ${apiCountries.size} countries from API")
+            } else {
+                errorMessage = "Failed to load data from server"
+                Log.e("API_ERROR", "Failed to fetch spots or countries")
+            }
+        } catch (e: Exception) {
+            errorMessage = "Error: ${e.message}"
+            Log.e("API_ERROR", "Exception while fetching data", e)
+        } finally {
+            isLoading = false
+        }
+    }
+
+    val filteredSpots = spots.filter {
+        it.country.contains(query, ignoreCase = true) ||
+                it.spotName.contains(query, ignoreCase = true)
+    }
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -432,29 +530,66 @@ fun DisplaySpotList(modifier: Modifier = Modifier) {
             HomeHeaderSection()
             ResearchBar(
                 query = query,
-                onQueryChange = { query = it })
-            filteredSpots.forEach { spot ->
-                SpotCard(
-                    imageRes = spot.imageRes,
-                    spotName = spot.spotName,
-                    country = spot.country,
-                    imageContentDescription = spot.imageContentDescription,
-                    difficultyLevel = spot.difficultyLevel,
-                    onClick = {
-                        val intent = Intent(context, SpotDetailsActivity::class.java).apply {
-                            putExtra("SPOT_ID", spot.id)
-                            putExtra("SPOT_NAME", spot.spotName)
-                            putExtra("COUNTRY", spot.country)
-                            putExtra("IMAGE_RES", spot.imageRes)
-                            putExtra("DIFFICULTY_LEVEL", spot.difficultyLevel)
-                            putExtra("PEAK_SEASON_START", spot.peakSeasonStart)
-                            putExtra("PEAK_SEASON_END", spot.peakSeasonEnd)
-                            putExtra("GPS_COORDINATES", spot.gpsCoordinates)
-                            putExtra("SURFING_CULTURE", spot.surfingCulture)
-                        }
-                        context.startActivity(intent)
+                onQueryChange = { query = it }
+            )
+
+            when {
+                isLoading -> {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
                     }
-                )
+                }
+                errorMessage != null -> {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = errorMessage ?: "Unknown error",
+                            color = MaterialTheme.colorScheme.error,
+                            fontFamily = NeueMontrealRegularFontFamily
+                        )
+                    }
+                }
+                filteredSpots.isEmpty() -> {
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "No spots found",
+                            fontFamily = NeueMontrealRegularFontFamily
+                        )
+                    }
+                }
+                else -> {
+                    filteredSpots.forEach { spot ->
+                        SpotCard(
+                            imageRes = spot.imageRes,
+                            spotName = spot.spotName,
+                            country = spot.country,
+                            imageContentDescription = spot.imageContentDescription,
+                            difficultyLevel = spot.difficultyLevel,
+                            onClick = {
+                                val intent = Intent(context, SpotDetailsActivity::class.java).apply {
+                                    putExtra("SPOT_ID", spot.id)
+                                    putExtra("SPOT_NAME", spot.spotName)
+                                    putExtra("COUNTRY", spot.country)
+                                    putExtra("IMAGE_RES", spot.imageRes)
+                                    putExtra("DIFFICULTY_LEVEL", spot.difficultyLevel)
+                                    putExtra("PEAK_SEASON_START", spot.peakSeasonStart)
+                                    putExtra("PEAK_SEASON_END", spot.peakSeasonEnd)
+                                    putExtra("GPS_COORDINATES", spot.gpsCoordinates)
+                                    putExtra("SURFING_CULTURE", spot.surfingCulture)
+                                }
+                                context.startActivity(intent)
+                            }
+                        )
+                    }
+                }
             }
         }
         BottomNavBarHome()

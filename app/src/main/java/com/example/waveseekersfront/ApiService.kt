@@ -9,13 +9,16 @@ import javax.net.ssl.X509TrustManager
 import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 interface ApiService {
     companion object {
         private const val BASE_URL = "https://10.0.2.2:8443/"
+        private val gson = Gson()
 
         fun fetchHelloMessage(): String? {
-            val client = getUnsafeOkHttpClient() // OK maintenant
+            val client = getUnsafeOkHttpClient()
             val request = okhttp3.Request.Builder()
                 .url("${BASE_URL}hello")
                 .build()
@@ -23,6 +26,56 @@ interface ApiService {
             client.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) throw IOException("Unexpected code $response")
                 return response.body?.string()
+            }
+        }
+
+        fun fetchCountries(): List<ApiCountry>? {
+            val client = getUnsafeOkHttpClient()
+            val request = Request.Builder()
+                .url("${BASE_URL}countries")
+                .build()
+
+            try {
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) {
+                        throw IOException("Unexpected code $response")
+                    }
+
+                    val responseBody = response.body?.string()
+                    if (responseBody != null) {
+                        val listType = object : TypeToken<List<ApiCountry>>() {}.type
+                        return gson.fromJson(responseBody, listType)
+                    }
+                    return null
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return null
+            }
+        }
+
+        fun fetchSpotList(): List<ApiSpot>? {
+            val client = getUnsafeOkHttpClient()
+            val request = Request.Builder()
+                .url("${BASE_URL}spots")
+                .build()
+
+            try {
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) {
+                        throw IOException("Unexpected code $response")
+                    }
+
+                    val responseBody = response.body?.string()
+                    if (responseBody != null) {
+                        val listType = object : TypeToken<List<ApiSpot>>() {}.type
+                        return gson.fromJson(responseBody, listType)
+                    }
+                    return null
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return null
             }
         }
 
