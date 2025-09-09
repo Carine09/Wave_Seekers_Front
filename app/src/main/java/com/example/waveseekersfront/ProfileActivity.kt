@@ -44,6 +44,7 @@ import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealRegularFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
 
+
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
