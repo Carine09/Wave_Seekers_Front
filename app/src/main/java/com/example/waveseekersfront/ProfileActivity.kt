@@ -308,7 +308,7 @@ fun DisplayProfileInfo(modifier: Modifier = Modifier) {
 
     LaunchedEffect(Unit) {
         try {
-            // Il FAUT withContext(Dispatchers.IO) pour les appels réseau
+            // We need withContext(Dispatchers.IO) http calls or else it doesn't work
             val apiUser = withContext(Dispatchers.IO) {
                 ApiService.fetchUser(1)
             }

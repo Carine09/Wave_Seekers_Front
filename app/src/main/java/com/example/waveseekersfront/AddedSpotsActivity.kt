@@ -32,6 +32,14 @@ import androidx.compose.ui.unit.sp
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
 
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 class AddedSpotsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,39 +84,50 @@ fun AddedSpotsHeaderSection(modifier: Modifier = Modifier) {
 
 /*---------------------BODY---------------------------*/
 @Composable
-fun AddedSpotList(modifier: Modifier = Modifier) {
+
+fun AddedSpotList(userSpots: List<Spot>, modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
-    Column(
-        modifier = modifier
-
-    ) {
-        SpotCard(
-            imageRes = R.drawable.manubay_spot_picture,
-            spotName = "Manu Bay, Raglan",
-            country = "New Zealand",
-            imageContentDescription = "Manu Bay spot picture",
-            difficultyLevel = 2,
-            onClick = {
-                val intent = Intent(context, SpotDetailsActivity::class.java).apply {
-                    putExtra("SPOT_ID", "manubay")
-                    putExtra("SPOT_NAME", "Manu Bay, Raglan")
-                    putExtra("COUNTRY", "New Zealand")
-                    putExtra("IMAGE_RES", R.drawable.manubay_spot_picture)
-                    putExtra("DIFFICULTY_LEVEL", 2)
-                    putExtra("PEAK_SEASON_START", "12-01")
-                    putExtra("PEAK_SEASON_END", "01-31")
-                    putExtra("GPS_COORDINATES", "37° 39′ 00″ S, 174° 45′ 00″ E")
-                    putExtra("SURFING_CULTURE", "Manu Bay gained international fame after featuring in the 1966 surf film The Endless Summer, introducing the world to New Zealand's pristine left-hand point break. The wave breaks consistently along a rocky coastline near Raglan, creating long, workable walls perfect for traditional longboard surfing and modern shortboard performance. New Zealand's surfing culture at Manu Bay reflects the country's laid-back, environmentally conscious ethos, with strong emphasis on preserving the natural coastline. Local Maori connections to the ocean add cultural depth to the surfing experience, respecting indigenous relationships with the sea. The spot remains relatively uncrowded compared to other world-class breaks, maintaining its appeal as a peaceful surfing sanctuary in the Southern Hemisphere.")
+    Column(modifier = modifier) {
+        userSpots.forEach { spot ->
+            SpotCard(
+                imageRes = spot.imageRes,
+                spotName = spot.spotName,
+                country = spot.country,
+                imageContentDescription = spot.imageContentDescription,
+                difficultyLevel = spot.difficultyLevel,
+                onClick = {
+                    val intent = Intent(context, SpotDetailsActivity::class.java).apply {
+                        putExtra("SPOT_ID", spot.id)
+                        putExtra("SPOT_NAME", spot.spotName)
+                        putExtra("COUNTRY", spot.country)
+                        putExtra("IMAGE_RES", spot.imageRes)
+                        putExtra("DIFFICULTY_LEVEL", spot.difficultyLevel)
+                        putExtra("PEAK_SEASON_START", spot.peakSeasonStart)
+                        putExtra("PEAK_SEASON_END", spot.peakSeasonEnd)
+                        putExtra("GPS_COORDINATES", spot.gpsCoordinates)
+                        putExtra("SURFING_CULTURE", spot.surfingCulture)
+                    }
+                    context.startActivity(intent)
                 }
-                context.startActivity(intent)
-            }
-        )
-
+            )
+        }
     }
 }
 @Composable
 fun DisplayAddedSpots(modifier: Modifier = Modifier) {
+    var userSpots by remember { mutableStateOf<List<Spot>>(emptyList()) }
+
+    LaunchedEffect(Unit) {
+        val (apiSpots, apiCountries) = withContext(Dispatchers.IO) {
+            val spots = ApiService.fetchSpotsByUser(1) //user_ud : 1 to mock the connected version
+            val countries = ApiService.fetchCountries()
+            Pair(spots, countries)
+        }
+        if (apiSpots != null && apiCountries != null) {
+            userSpots = apiSpots.map { it.toUiSpot(apiCountries) }
+        }
+    }
     Column(
         modifier = modifier.fillMaxSize()
     ){
@@ -120,7 +139,7 @@ fun DisplayAddedSpots(modifier: Modifier = Modifier) {
         ) {
             AddedSpotsHeaderSection()
             ProfileInfoSeparator()
-            AddedSpotList()
+            AddedSpotList(userSpots = userSpots)
 
         }
         AddedSpotsNavBar()

@@ -116,6 +116,35 @@ interface ApiService {
             }
         }
 
+        fun fetchSpotsByUser(userID: Int): List<ApiSpot>? {
+            val client = getUnsafeOkHttpClient()
+            val request = Request.Builder()
+                .url("${BASE_URL}spots/user/$userID")
+                .build()
+            try {
+                client.newCall(request).execute().use { response ->
+                    Log.d("API_USER_SPOTS", "Response code: ${response.code}")
+                    if (!response.isSuccessful) {
+                        Log.e("API_USER_SPOTS", "Unsuccessful response: $response")
+                        throw IOException("Unexpected code $response")
+                    }
+                    val responseBody = response.body?.string()
+                    Log.d("API_USER_SPOTS", "Response body: $responseBody")
+                    if (responseBody != null) {
+                        val listType = object : TypeToken<List<ApiSpot>>() {}.type
+                        val spots = gson.fromJson<List<ApiSpot>>(responseBody, listType)
+                        Log.d("API_USER_SPOTS", "Parsed ${spots?.size ?: 0} spots for user $userID")
+                        return spots
+                    }
+                    return null
+                }
+            } catch (e: Exception) {
+                Log.e("API_USER_SPOTS", "Exception fetching user spots", e)
+                e.printStackTrace()
+                return null
+            }
+        }
+
         private fun getUnsafeOkHttpClient(): OkHttpClient {
             val trustAllCerts = arrayOf<TrustManager>(object : X509TrustManager {
                 override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {}
