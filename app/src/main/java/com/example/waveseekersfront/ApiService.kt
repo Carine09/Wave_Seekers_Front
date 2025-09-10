@@ -8,14 +8,13 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 import okhttp3.Request
-import okhttp3.Response
 import java.io.IOException
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
 interface ApiService {
     companion object {
-        private const val BASE_URL = "https://localhost:8443/"
+        private const val BASE_URL = "https://10.0.2.2:8443/"
         private val gson = Gson()
 
         fun fetchHelloMessage(): String? {
@@ -78,6 +77,44 @@ interface ApiService {
                     if (responseBody != null) {
                         val listType = object : TypeToken<List<ApiSpot>>() {}.type
                         return gson.fromJson(responseBody, listType)
+                    }
+                    return null
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return null
+            }
+        }
+
+        fun addSpot(spot: NewApiSpot): ApiSpot? {
+            val client = getUnsafeOkHttpClient()
+
+            val formBody = okhttp3.FormBody.Builder()
+                .add("destination", spot.destination)
+                .add("location", spot.location)
+                .add("lat", spot.lat.toString())
+                .add("long", spot.long.toString())
+                .add("peak_season_start", spot.peakSeasonStart)
+                .add("peak_season_end", spot.peakSeasonEnd)
+                .add("difficulty_level", spot.difficultyLevel.toString())
+                .add("surfing_culture", spot.surfingCulture)
+                .add("image_url", spot.imageUrl)
+                .build()
+
+            val request = Request.Builder()
+                .url("${BASE_URL}spots")
+                .post(formBody)
+                .build()
+
+            try {
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) {
+                        Log.e("API_ADD_SPOT", "Erreur: ${response.code}")
+                        return null
+                    }
+                    val responseBody = response.body?.string()
+                    if (responseBody != null) {
+                        return gson.fromJson(responseBody, ApiSpot::class.java)
                     }
                     return null
                 }

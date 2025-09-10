@@ -16,13 +16,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -74,6 +71,18 @@ class NewSpotActivity : ComponentActivity() {
     }
 }
 
+data class NewApiSpot(
+    val destination: String,
+    val location: String,
+    val lat: Double,
+    val long: Double,
+    val peakSeasonStart: String,
+    val peakSeasonEnd: String,
+    val difficultyLevel: Int,
+    val surfingCulture: String,
+    val imageUrl: String
+)
+
 @Composable
 fun AddSpotHeaderSection(modifier: Modifier = Modifier) {
     Row(
@@ -90,32 +99,37 @@ fun AddSpotHeaderSection(modifier: Modifier = Modifier) {
         Image(
             painter = painterResource(R.drawable.wave_seekers_secondary_logo_light),
             contentDescription = "Secondary wave seekers logo",
-            modifier = Modifier
-                .padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp)
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DifficultyMenuDropDown() {
-    val list = listOf("Select the difficulty level of this spot !","1 - Beginner - Gentle waves, safe conditions, perfect for learning", "2 - Novice - Small to medium waves, mostly forgiving breaks", "3 - Intermediate - Consistent waves, requires solid skills", "4 - Advanced - Powerful waves, extensive experience needed", "5 - Expert Only - Massive dangerous waves, serious consequences")
+fun DifficultyMenuDropDown(
+    selectedDifficulty: String,
+    onDifficultySelected: (String) -> Unit
+) {
+    val list = listOf(
+        "1 - Beginner - Gentle waves, safe conditions, perfect for learning",
+        "2 - Novice - Small to medium waves, mostly forgiving breaks",
+        "3 - Intermediate - Consistent waves, requires solid skills",
+        "4 - Advanced - Powerful waves, extensive experience needed",
+        "5 - Expert Only - Massive dangerous waves, serious consequences"
+    )
     var isExpanded by remember { mutableStateOf(false) }
-    var selectedText by remember { mutableStateOf(list[0]) }
 
-    Column (
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 10.dp),
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-    ){
+    ) {
         ExposedDropdownMenuBox(
             expanded = isExpanded,
-            onExpandedChange = { isExpanded = !isExpanded}
+            onExpandedChange = { isExpanded = !isExpanded }
         ) {
             TextField(
                 modifier = Modifier.menuAnchor(),
-                value = selectedText,
+                value = if (selectedDifficulty.isEmpty()) "Select difficulty" else selectedDifficulty,
                 onValueChange = {},
                 readOnly = true,
                 colors = ExposedDropdownMenuDefaults.textFieldColors(
@@ -127,18 +141,23 @@ fun DifficultyMenuDropDown() {
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) }
             )
             ExposedDropdownMenu(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.onSecondary),
+                modifier = Modifier.background(MaterialTheme.colorScheme.onSecondary),
                 expanded = isExpanded,
                 onDismissRequest = { isExpanded = false }
             ) {
-                list.forEachIndexed { index, text ->
+                list.forEach { text ->
                     DropdownMenuItem(
                         text = {
-                            Text(text = text, style = TextStyle(fontFamily = NeueMontrealRegularFontFamily, color = MaterialTheme.colorScheme.primary))
+                            Text(
+                                text = text,
+                                style = TextStyle(
+                                    fontFamily = NeueMontrealRegularFontFamily,
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            )
                         },
                         onClick = {
-                            selectedText = list[index]
+                            onDifficultySelected(text)
                             isExpanded = false
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
@@ -164,10 +183,7 @@ fun AddSpotContent() {
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-            selectedImageUri = uri;
-            // Callback is invoked after the user selects a media item or closes the
-            // photo picker.
-            // Add or modify code below to save image data in data base
+            selectedImageUri = uri
             if (uri != null) {
                 Log.d("PhotoPicker", "Selected URI: $uri")
             } else {
@@ -179,7 +195,8 @@ fun AddSpotContent() {
     val context = LocalContext.current
 
     Column {
-        Row (verticalAlignment = Alignment.CenterVertically) {
+        // Spot name
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(R.drawable.spot_name_blue_icon),
                 contentDescription = "Blue wave icon",
@@ -190,28 +207,28 @@ fun AddSpotContent() {
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
-                modifier = Modifier
-                    .padding(start = 4.dp)
+                modifier = Modifier.padding(start = 4.dp)
             )
         }
-        OutlinedTextField(colors = TextFieldDefaults.colors(
-            cursorColor = MaterialTheme.colorScheme.primary,
-            focusedTextColor = MaterialTheme.colorScheme.primary,
-            unfocusedTextColor = MaterialTheme.colorScheme.primary,
-            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-            focusedContainerColor = Color.Transparent,
-            unfocusedContainerColor = Color.Transparent,
-            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
+        OutlinedTextField(
+            colors = TextFieldDefaults.colors(
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary
+            ),
             value = spotName,
             onValueChange = { spotName = it },
             singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp),
+            modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp),
         )
 
-        Row (verticalAlignment = Alignment.CenterVertically) {
+        // Country
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(R.drawable.country_blue_icon),
                 contentDescription = "Blue world icon",
@@ -222,61 +239,60 @@ fun AddSpotContent() {
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
-                modifier = Modifier
-                    .padding(start = 4.dp)
+                modifier = Modifier.padding(start = 4.dp)
             )
         }
-        OutlinedTextField(colors = TextFieldDefaults.colors(
-            cursorColor = MaterialTheme.colorScheme.primary,
-            focusedTextColor = MaterialTheme.colorScheme.primary,
-            unfocusedTextColor = MaterialTheme.colorScheme.primary,
-            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-            focusedContainerColor = Color.Transparent,
-            unfocusedContainerColor = Color.Transparent,
-            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
+        OutlinedTextField(
+            colors = TextFieldDefaults.colors(
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary
+            ),
             value = country,
             onValueChange = { country = it },
             singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp)
-            //remplace le top
+            modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp)
         )
 
-        Row (verticalAlignment = Alignment.CenterVertically) {
+        // GPS coordinates
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(R.drawable.gps_coordinates_blue_icon),
                 contentDescription = "Blue location pin icon",
                 modifier = Modifier.height(30.dp)
             )
             Text(
-                text = "GPS coordinates",
+                text = "GPS coordinates (lat, long => ex: 9.4444, -7.345)",
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
-                modifier = Modifier
-                    .padding(start = 4.dp)
+                modifier = Modifier.padding(start = 4.dp)
             )
         }
-        OutlinedTextField(colors = TextFieldDefaults.colors(
-            cursorColor = MaterialTheme.colorScheme.primary,
-            focusedTextColor = MaterialTheme.colorScheme.primary,
-            unfocusedTextColor = MaterialTheme.colorScheme.primary,
-            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-            focusedContainerColor = Color.Transparent,
-            unfocusedContainerColor = Color.Transparent,
-            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
+        OutlinedTextField(
+            colors = TextFieldDefaults.colors(
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary
+            ),
             value = gpsCoordinates,
             onValueChange = { gpsCoordinates = it },
             singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp)
+            modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp)
         )
 
-        Row (verticalAlignment = Alignment.CenterVertically) {
+        // Peak season start
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(R.drawable.peak_season_blue_icon),
                 contentDescription = "Blue calendar icon",
@@ -287,28 +303,23 @@ fun AddSpotContent() {
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
-                modifier = Modifier
-                    .padding(start = 4.dp)
+                modifier = Modifier.padding(start = 4.dp)
             )
         }
-        OutlinedTextField(colors = TextFieldDefaults.colors(
-            cursorColor = MaterialTheme.colorScheme.primary,
-            focusedTextColor = MaterialTheme.colorScheme.primary,
-            unfocusedTextColor = MaterialTheme.colorScheme.primary,
-            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-            focusedContainerColor = Color.Transparent,
-            unfocusedContainerColor = Color.Transparent,
-            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
+        OutlinedTextField(
             value = startSeason,
             onValueChange = { startSeason = it },
             singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp)
+            modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp),
+            colors = TextFieldDefaults.colors(
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary
+            )
         )
 
-        Row (verticalAlignment = Alignment.CenterVertically) {
+        // Peak season end
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(R.drawable.peak_season_blue_icon),
                 contentDescription = "Blue calendar icon",
@@ -319,28 +330,23 @@ fun AddSpotContent() {
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
-                modifier = Modifier
-                    .padding(start = 4.dp)
+                modifier = Modifier.padding(start = 4.dp)
             )
         }
-        OutlinedTextField(colors = TextFieldDefaults.colors(
-            cursorColor = MaterialTheme.colorScheme.primary,
-            focusedTextColor = MaterialTheme.colorScheme.primary,
-            unfocusedTextColor = MaterialTheme.colorScheme.primary,
-            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-            focusedContainerColor = Color.Transparent,
-            unfocusedContainerColor = Color.Transparent,
-            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
+        OutlinedTextField(
             value = endSeason,
             onValueChange = { endSeason = it },
             singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp)
+            modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp),
+            colors = TextFieldDefaults.colors(
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary
+            )
         )
 
-        Row (verticalAlignment = Alignment.CenterVertically) {
+        // Difficulty level
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(R.drawable.difficulty_star_darkblue_full_icon),
                 contentDescription = "Blue star icon",
@@ -351,13 +357,16 @@ fun AddSpotContent() {
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
-                modifier = Modifier
-                    .padding(start = 4.dp)
+                modifier = Modifier.padding(start = 4.dp)
             )
         }
-        DifficultyMenuDropDown()
+        DifficultyMenuDropDown(
+            selectedDifficulty = waveDifficulty,
+            onDifficultySelected = { waveDifficulty = it }
+        )
 
-        Row (verticalAlignment = Alignment.CenterVertically) {
+        // Surfing culture
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(R.drawable.surfing_culture_blue_icon),
                 contentDescription = "Blue information icon",
@@ -368,28 +377,23 @@ fun AddSpotContent() {
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
-                modifier = Modifier
-                    .padding(start = 4.dp)
+                modifier = Modifier.padding(start = 4.dp)
             )
         }
-        OutlinedTextField(colors = TextFieldDefaults.colors(
-            cursorColor = MaterialTheme.colorScheme.primary,
-            focusedTextColor = MaterialTheme.colorScheme.primary,
-            unfocusedTextColor = MaterialTheme.colorScheme.primary,
-            unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-            focusedContainerColor = Color.Transparent,
-            unfocusedContainerColor = Color.Transparent,
-            focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-            unfocusedIndicatorColor = MaterialTheme.colorScheme.primary),
+        OutlinedTextField(
             value = surfingCulture,
             onValueChange = { surfingCulture = it },
             singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp, bottom = 10.dp)
+            modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp),
+            colors = TextFieldDefaults.colors(
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary
+            )
         )
 
-        Row (verticalAlignment = Alignment.CenterVertically) {
+        // Image picker
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
                 painter = painterResource(R.drawable.add_image_blue_icon),
                 contentDescription = "Blue picture icon",
@@ -400,24 +404,17 @@ fun AddSpotContent() {
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
-                modifier = Modifier
-                    .padding(start = 4.dp)
+                modifier = Modifier.padding(start = 4.dp)
             )
         }
-
-        // Section modifiée - remplace le LazyRow par une Column
         Column {
             Button(
                 onClick = {
                     singlePhotoPickerLauncher.launch(
-                        PickVisualMediaRequest(
-                            ActivityResultContracts.PickVisualMedia.ImageOnly
-                        )
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
                 },
-                modifier = Modifier
-                    .padding(top = 10.dp)
-                    .fillMaxWidth(),
+                modifier = Modifier.padding(top = 10.dp).fillMaxWidth(),
                 shape = RoundedCornerShape(5.dp)
             ) {
                 Text(
@@ -427,26 +424,41 @@ fun AddSpotContent() {
                 )
             }
 
-            // Afficher l'image sélectionnée en dessous du bouton avec un padding de 16dp
             if (selectedImageUri != null) {
                 AsyncImage(
                     model = selectedImageUri,
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp) // Padding de 16dp comme demandé
+                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
                 )
             }
         }
 
+        // Submit button
         SubmitButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 20.dp)
+            modifier = Modifier.fillMaxWidth().padding(top = 20.dp)
         ) {
-            val intent = Intent(context, SpotListActivity::class.java)
-            context.startActivity(intent)
+            val latLong = gpsCoordinates.split(",")
+            val lat = latLong.getOrNull(0)?.toDoubleOrNull() ?: 0.0
+            val long = latLong.getOrNull(1)?.toDoubleOrNull() ?: 0.0
+            val difficulty = waveDifficulty.filter { it.isDigit() }.toIntOrNull() ?: 1
+
+            val spot = NewApiSpot(
+                destination = spotName,
+                location = country,
+                lat = lat,
+                long = long,
+                peakSeasonStart = startSeason,
+                peakSeasonEnd = endSeason,
+                difficultyLevel = difficulty,
+                surfingCulture = surfingCulture,
+                imageUrl = imageUrl
+            )
+
+            Thread {
+                val response = ApiService.addSpot(spot)
+                Log.d("ADD_SPOT", "Response: $response")
+            }.start()
         }
     }
 }
@@ -454,12 +466,14 @@ fun AddSpotContent() {
 @Composable
 fun SubmitButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit) {
+    onClick: () -> Unit
+) {
     Button(
         onClick = { onClick() },
         modifier = modifier,
         shape = RoundedCornerShape(5.dp),
-        colors= ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),) {
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
+    ) {
         Text(
             "Submit",
             fontFamily = NeueMontrealMediumFontFamily,
@@ -479,9 +493,7 @@ fun NavBarButtonAddSpot(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .padding(vertical = 4.dp)
-            .clickable { onClick() }
+        modifier = modifier.padding(vertical = 4.dp).clickable { onClick() }
     ) {
         Image(
             painter = painterResource(iconRes),
@@ -501,10 +513,7 @@ fun NavBarButtonAddSpot(
 fun BottomNavBarAddSpot(modifier: Modifier = Modifier) {
     val context = LocalContext.current
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.onSecondary)
-            .padding(horizontal = 24.dp)
+        modifier = modifier.fillMaxWidth().background(MaterialTheme.colorScheme.onSecondary).padding(horizontal = 24.dp)
     ) {
         NavBarButtonAddSpot(
             iconRes = R.drawable.account_grey_icon,
@@ -547,12 +556,9 @@ fun BottomNavBarAddSpot(modifier: Modifier = Modifier) {
 fun DisplayNewSpotForm(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxSize()
-    ){
+    ) {
         Column(
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-                .padding(24.dp)
+            modifier = Modifier.weight(1f).verticalScroll(rememberScrollState()).padding(24.dp)
         ) {
             AddSpotHeaderSection()
             AddSpotContent()
@@ -563,7 +569,7 @@ fun DisplayNewSpotForm(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun AddSpotHeaderPreview(){
+fun AddSpotHeaderPreview() {
     WaveSeekersFrontTheme {
         AddSpotHeaderSection(modifier = Modifier.padding(32.dp))
     }
@@ -571,7 +577,7 @@ fun AddSpotHeaderPreview(){
 
 @Preview(showBackground = true)
 @Composable
-fun AddSpotNavBarPreview(){
+fun AddSpotNavBarPreview() {
     WaveSeekersFrontTheme {
         BottomNavBarAddSpot()
     }
@@ -587,7 +593,7 @@ fun NewSpotPreview() {
 
 @Preview(showBackground = true)
 @Composable
-fun AddSpotContentPreview(){
+fun AddSpotContentPreview() {
     WaveSeekersFrontTheme {
         AddSpotContent()
     }
