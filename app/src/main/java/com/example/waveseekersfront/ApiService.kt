@@ -1,5 +1,6 @@
 package com.example.waveseekersfront
 
+import android.util.Log
 import okhttp3.OkHttpClient
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
@@ -14,7 +15,7 @@ import com.google.gson.reflect.TypeToken
 
 interface ApiService {
     companion object {
-        private const val BASE_URL = "https://10.0.2.2:8443/"
+        private const val BASE_URL = "https://localhost:8443/"
         private val gson = Gson()
 
         fun fetchHelloMessage(): String? {
@@ -37,18 +38,25 @@ interface ApiService {
 
             try {
                 client.newCall(request).execute().use { response ->
+                    Log.d("API_COUNTRIES", "Response code: ${response.code}")
                     if (!response.isSuccessful) {
+                        Log.e("API_COUNTRIES", "Unsuccessful response: $response")
                         throw IOException("Unexpected code $response")
                     }
 
                     val responseBody = response.body?.string()
+                    Log.d("API_COUNTRIES", "Response body: $responseBody")
+
                     if (responseBody != null) {
                         val listType = object : TypeToken<List<ApiCountry>>() {}.type
-                        return gson.fromJson(responseBody, listType)
+                        val countries = gson.fromJson<List<ApiCountry>>(responseBody, listType)
+                        Log.d("API_COUNTRIES", "Parsed ${countries?.size ?: 0} countries")
+                        return countries
                     }
                     return null
                 }
             } catch (e: Exception) {
+                Log.e("API_COUNTRIES", "Exception fetching countries", e)
                 e.printStackTrace()
                 return null
             }
