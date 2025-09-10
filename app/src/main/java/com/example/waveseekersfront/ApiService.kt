@@ -15,7 +15,7 @@ import com.google.gson.reflect.TypeToken
 
 interface ApiService {
     companion object {
-        private const val BASE_URL = "https://localhost:8443/"
+        private const val BASE_URL = "https://10.0.2.2:8443/"
         private val gson = Gson()
 
         fun fetchHelloMessage(): String? {
@@ -82,6 +82,35 @@ interface ApiService {
                     return null
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
+                return null
+            }
+        }
+
+
+        fun fetchUser(userID: Int): ApiUser? {
+            val client = getUnsafeOkHttpClient()
+            val request = Request.Builder()
+                .url("${BASE_URL}users/$userID")
+                .build()
+            try {
+                client.newCall(request).execute().use { response ->
+                    Log.d("API_USER", "Response code: ${response.code}")
+                    if (!response.isSuccessful) {
+                        Log.e("API_USER", "Unsuccessful response: $response")
+                        throw IOException("Unexpected code $response")
+                    }
+                    val responseBody = response.body?.string()
+                    Log.d("API_USER", "Response body: $responseBody")
+                    if (responseBody != null) {
+                        val user = gson.fromJson(responseBody, ApiUser::class.java)
+                        Log.d("API_USER", "Parsed user ID: ${user?.ID}")
+                        return user
+                    }
+                    return null
+                }
+            } catch (e: Exception) {
+                Log.e("API_USER", "Exception fetching user", e)
                 e.printStackTrace()
                 return null
             }

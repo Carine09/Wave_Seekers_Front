@@ -79,6 +79,12 @@ data class ApiCountry(
     @SerializedName("Name") val name: String
 )
 
+data class ApiUser(
+    val ID: Int,
+    val Email: String,
+    val Password: String
+)
+
 // Dynamic converter function
 fun ApiSpot.toUiSpot(countries: List<ApiCountry>): Spot {
     return Spot(
