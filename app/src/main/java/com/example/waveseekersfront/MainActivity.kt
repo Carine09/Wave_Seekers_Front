@@ -51,10 +51,10 @@ fun LoadingScreen(onLoadingFinished: () -> Unit) {
             val message = withContext(kotlinx.coroutines.Dispatchers.IO) {
                 ApiService.fetchHelloMessage()
             }
-            // Affiche dans le logcat
-            Log.d("API_TEST", "Message reçu du back: $message")
+            // Displayed in Logcat
+            Log.d("API_TEST", "Message from backend: $message")
         } catch (e: Exception) {
-            Log.e("API_TEST", "Erreur lors de la récupération du message", e)
+            Log.e("API_TEST", "Error when retrieving message", e)
         }
 
         delay(2000)
