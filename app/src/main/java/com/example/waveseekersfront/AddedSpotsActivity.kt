@@ -125,7 +125,7 @@ fun DisplayAddedSpots(modifier: Modifier = Modifier) {
             Pair(spots, countries)
         }
         if (apiSpots != null && apiCountries != null) {
-            userSpots = apiSpots.map { it.toUiSpot(apiCountries) }
+            userSpots = apiSpots.map { it.toUiSpot() }
         }
     }
     Column(
