@@ -43,6 +43,11 @@ import com.example.waveseekersfront.ui.theme.NeueMontrealBoldFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealRegularFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import android.util.Log
+import androidx.compose.runtime.LaunchedEffect
 
 
 class ProfileActivity : ComponentActivity() {
@@ -297,6 +302,32 @@ fun ProfileInfoSeparator(){
 
 @Composable
 fun DisplayProfileInfo(modifier: Modifier = Modifier) {
+    var user by remember { mutableStateOf<ApiUser?>(null) }
+    var isLoading by remember { mutableStateOf(true) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(Unit) {
+        try {
+            // We need withContext(Dispatchers.IO) http calls or else it doesn't work
+            val apiUser = withContext(Dispatchers.IO) {
+                ApiService.fetchUser(1)
+            }
+            if (apiUser != null) {
+                user = apiUser
+                Log.d("PROFILE_SUCCESS", "Loaded user: ${apiUser.Email}")
+            } else {
+                errorMessage = "Failed to load user data"
+                Log.e("PROFILE_ERROR", "Failed to fetch user")
+            }
+        } catch (e: Exception) {
+            errorMessage = "Error: ${e.message}"
+            Log.e("PROFILE_ERROR", "Exception while fetching user", e)
+        } finally {
+            isLoading = false
+        }
+    }
+
+
     Column(
         modifier = modifier.fillMaxSize()
     ){
