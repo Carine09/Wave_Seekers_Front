@@ -63,6 +63,7 @@ data class ApiSpot(
     val id: Int,
     val user_id: Int,
     val country_id: Int,
+    val country_name: String,
     val destination: String,
     val location: String,
     val lat: Double,
@@ -86,12 +87,12 @@ data class ApiUser(
 )
 
 // Dynamic converter function
-fun ApiSpot.toUiSpot(countries: List<ApiCountry>): Spot {
+fun ApiSpot.toUiSpot(): Spot {
     return Spot(
         id = this.id.toString(),
         imageRes = getImageResourceForDestination(this.destination),
         spotName = "${this.destination}, ${this.location}",
-        country = getCountryNameFromId(this.country_id, countries),
+        country = this.country_name, // ✅ maintenant direct
         imageContentDescription = "${this.destination} spot picture",
         difficultyLevel = this.difficulty_level,
         peakSeasonStart = this.peak_season_start,
@@ -99,13 +100,6 @@ fun ApiSpot.toUiSpot(countries: List<ApiCountry>): Spot {
         gpsCoordinates = "${this.lat}, ${this.long}",
         surfingCulture = this.surfing_culture
     )
-}
-
-// Dynamic country mapping
-private fun getCountryNameFromId(countryId: Int, countries: List<ApiCountry>): String {
-    val foundCountry = countries.find { it.id == countryId }
-    Log.d("COUNTRY_DEBUG", "Looking for country ID: $countryId in ${countries.size} countries, found: ${foundCountry?.name}")
-    return foundCountry?.name ?: "Unknown"
 }
 
 // Image mapping
@@ -384,9 +378,8 @@ fun DisplaySpotList(modifier: Modifier = Modifier) {
                 Pair(spots, countries)
             }
 
-            if (apiSpots != null && apiCountries != null) {
-                spots = apiSpots.map { it.toUiSpot(apiCountries) }
-                Log.d("API_SUCCESS", "Loaded ${spots.size} spots and ${apiCountries.size} countries from API")
+            if (apiSpots != null) {
+                spots = apiSpots.map { it.toUiSpot()}
             } else {
                 errorMessage = "Failed to load data from server"
                 Log.e("API_ERROR", "Failed to fetch spots or countries")
