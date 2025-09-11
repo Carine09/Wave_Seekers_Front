@@ -14,7 +14,7 @@ import com.google.gson.reflect.TypeToken
 
 interface ApiService {
     companion object {
-        private const val BASE_URL = "https://10.0.2.2:8443/"
+        private const val BASE_URL = "https://localhost:8443/"
         private val gson = Gson()
 
         fun fetchHelloMessage(): String? {

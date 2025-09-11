@@ -299,7 +299,7 @@ fun AddSpotContent() {
                 modifier = Modifier.height(30.dp)
             )
             Text(
-                text = "Peak surf season starts (MM/DD)",
+                text = "Peak surf season starts (MM-DD)",
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
@@ -314,7 +314,12 @@ fun AddSpotContent() {
             colors = TextFieldDefaults.colors(
                 cursorColor = MaterialTheme.colorScheme.primary,
                 focusedTextColor = MaterialTheme.colorScheme.primary,
-                unfocusedTextColor = MaterialTheme.colorScheme.primary
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary
             )
         )
 
@@ -326,7 +331,7 @@ fun AddSpotContent() {
                 modifier = Modifier.height(30.dp)
             )
             Text(
-                text = "Peak surf season ends (MM/DD)",
+                text = "Peak surf season ends (MM-DD)",
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
@@ -341,7 +346,12 @@ fun AddSpotContent() {
             colors = TextFieldDefaults.colors(
                 cursorColor = MaterialTheme.colorScheme.primary,
                 focusedTextColor = MaterialTheme.colorScheme.primary,
-                unfocusedTextColor = MaterialTheme.colorScheme.primary
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary
             )
         )
 
@@ -388,7 +398,12 @@ fun AddSpotContent() {
             colors = TextFieldDefaults.colors(
                 cursorColor = MaterialTheme.colorScheme.primary,
                 focusedTextColor = MaterialTheme.colorScheme.primary,
-                unfocusedTextColor = MaterialTheme.colorScheme.primary
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary
             )
         )
 
@@ -458,6 +473,11 @@ fun AddSpotContent() {
             Thread {
                 val response = ApiService.addSpot(spot)
                 Log.d("ADD_SPOT", "Response: $response")
+                (context as? ComponentActivity)?.runOnUiThread {
+                    val intent = Intent(context, SpotListActivity::class.java)
+                    context.startActivity(intent)
+                    context.finish()
+                }
             }.start()
         }
     }
