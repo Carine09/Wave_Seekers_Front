@@ -36,6 +36,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,6 +55,9 @@ import coil.compose.AsyncImage
 import com.example.waveseekersfront.ui.theme.NeueMontrealMediumFontFamily
 import com.example.waveseekersfront.ui.theme.NeueMontrealRegularFontFamily
 import com.example.waveseekersfront.ui.theme.WaveSeekersFrontTheme
+import com.google.gson.annotations.SerializedName
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class NewSpotActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,15 +76,17 @@ class NewSpotActivity : ComponentActivity() {
 }
 
 data class NewApiSpot(
-    val destination: String,
-    val location: String,
-    val lat: Double,
-    val long: Double,
-    val peakSeasonStart: String,
-    val peakSeasonEnd: String,
-    val difficultyLevel: Int,
-    val surfingCulture: String,
-    val imageUrl: String
+    @SerializedName("destination") val destination: String,
+    @SerializedName("location") val location: String,
+    @SerializedName("country_id") val country_id: Int,
+    @SerializedName("lat") val lat: Double,
+    @SerializedName("long") val long: Double,
+    @SerializedName("peak_season_start") val peakSeasonStart: String,
+    @SerializedName("peak_season_end") val peakSeasonEnd: String,
+    @SerializedName("difficulty_level") val difficultyLevel: Int,
+    @SerializedName("surfing_culture") val surfingCulture: String,
+    @SerializedName("image_url") val imageUrl: String,
+    @SerializedName("user_id") val userId: Int = 0
 )
 
 @Composable
@@ -136,7 +142,8 @@ fun DifficultyMenuDropDown(
                     focusedContainerColor = MaterialTheme.colorScheme.onTertiary,
                     unfocusedContainerColor = MaterialTheme.colorScheme.onSecondary,
                     focusedTextColor = MaterialTheme.colorScheme.primary,
-                    unfocusedTextColor = MaterialTheme.colorScheme.primary
+                    unfocusedTextColor = MaterialTheme.colorScheme.primary,
+
                 ),
                 trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded) }
             )
@@ -168,10 +175,61 @@ fun DifficultyMenuDropDown(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CountryDropdown(
+    countries: List<ApiCountry>,
+    selectedCountry: ApiCountry?,
+    onCountrySelected: (ApiCountry) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded }
+    ) {
+        TextField(
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth(),
+            value = selectedCountry?.name ?: "Select country",
+            onValueChange = {},
+            readOnly = true,
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                cursorColor = MaterialTheme.colorScheme.primary,
+            ),
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) }
+        )
+
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            countries.forEach { country ->
+                DropdownMenuItem(
+                    text = { Text(country.name) },
+                    onClick = {
+                        onCountrySelected(country)
+                        expanded = false
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                )
+            }
+        }
+    }
+}
+
+
 @Composable
 fun AddSpotContent() {
     var spotName by remember { mutableStateOf("") }
-    var country by remember { mutableStateOf("") }
+    var region by remember { mutableStateOf("") }
     var gpsCoordinates by remember { mutableStateOf("") }
     var startSeason by remember { mutableStateOf("") }
     var endSeason by remember { mutableStateOf("") }
@@ -180,6 +238,21 @@ fun AddSpotContent() {
     var imageUrl by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
 
+    var selectedCountry by remember { mutableStateOf<ApiCountry?>(null) }
+    var countries by remember { mutableStateOf<List<ApiCountry>>(emptyList()) }
+    var countriesError by remember { mutableStateOf<String?>(null) }
+    var countriesLoading by remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        try {
+            val result = withContext(Dispatchers.IO) { ApiService.fetchCountries() }
+            countries = result ?: emptyList()
+        } catch (e: Exception) {
+            countriesError = e.message ?: "Failed to load countries"
+        } finally {
+            countriesLoading = false
+        }
+    }
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
@@ -193,6 +266,7 @@ fun AddSpotContent() {
     )
 
     val context = LocalContext.current
+
 
     Column {
         // Spot name
@@ -227,6 +301,39 @@ fun AddSpotContent() {
             modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp),
         )
 
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                painter = painterResource(R.drawable.country_blue_icon),
+                contentDescription = "Blue region icon",
+                modifier = Modifier.height(30.dp)
+            )
+            Text(
+                text = "Région",
+                fontFamily = NeueMontrealMediumFontFamily,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(start = 4.dp)
+            )
+        }
+
+        // Region
+        OutlinedTextField(
+            value = region,
+            onValueChange = { region = it },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp),
+            colors = TextFieldDefaults.colors(
+                cursorColor = MaterialTheme.colorScheme.primary,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
+                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary
+            )
+        )
+
         // Country
         Row(verticalAlignment = Alignment.CenterVertically) {
             Image(
@@ -242,22 +349,31 @@ fun AddSpotContent() {
                 modifier = Modifier.padding(start = 4.dp)
             )
         }
-        OutlinedTextField(
-            colors = TextFieldDefaults.colors(
-                cursorColor = MaterialTheme.colorScheme.primary,
-                focusedTextColor = MaterialTheme.colorScheme.primary,
-                unfocusedTextColor = MaterialTheme.colorScheme.primary,
-                unfocusedLabelColor = MaterialTheme.colorScheme.primary,
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.primary
-            ),
-            value = country,
-            onValueChange = { country = it },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 10.dp)
-        )
+        when {
+            countriesLoading -> {
+                Text(
+                    text = "Loading countries...",
+                    fontFamily = NeueMontrealRegularFontFamily,
+                    color = MaterialTheme.colorScheme.secondary,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+            countriesError != null -> {
+                Text(
+                    text = "Error: $countriesError",
+                    fontFamily = NeueMontrealRegularFontFamily,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+            else -> {
+                CountryDropdown(
+                    countries = countries,
+                    selectedCountry = selectedCountry,
+                    onCountrySelected = { selectedCountry = it }
+                )
+            }
+        }
 
         // GPS coordinates
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -299,7 +415,7 @@ fun AddSpotContent() {
                 modifier = Modifier.height(30.dp)
             )
             Text(
-                text = "Peak surf season starts (MM/DD)",
+                text = "Peak surf season starts (MM-DD)",
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
@@ -314,7 +430,10 @@ fun AddSpotContent() {
             colors = TextFieldDefaults.colors(
                 cursorColor = MaterialTheme.colorScheme.primary,
                 focusedTextColor = MaterialTheme.colorScheme.primary,
-                unfocusedTextColor = MaterialTheme.colorScheme.primary
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+
             )
         )
 
@@ -326,7 +445,7 @@ fun AddSpotContent() {
                 modifier = Modifier.height(30.dp)
             )
             Text(
-                text = "Peak surf season ends (MM/DD)",
+                text = "Peak surf season ends (MM-DD)",
                 fontFamily = NeueMontrealMediumFontFamily,
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 14.sp,
@@ -341,7 +460,9 @@ fun AddSpotContent() {
             colors = TextFieldDefaults.colors(
                 cursorColor = MaterialTheme.colorScheme.primary,
                 focusedTextColor = MaterialTheme.colorScheme.primary,
-                unfocusedTextColor = MaterialTheme.colorScheme.primary
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
             )
         )
 
@@ -388,7 +509,9 @@ fun AddSpotContent() {
             colors = TextFieldDefaults.colors(
                 cursorColor = MaterialTheme.colorScheme.primary,
                 focusedTextColor = MaterialTheme.colorScheme.primary,
-                unfocusedTextColor = MaterialTheme.colorScheme.primary
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
             )
         )
 
@@ -443,9 +566,17 @@ fun AddSpotContent() {
             val long = latLong.getOrNull(1)?.toDoubleOrNull() ?: 0.0
             val difficulty = waveDifficulty.filter { it.isDigit() }.toIntOrNull() ?: 1
 
+
+            val countryId = selectedCountry?.id
+            if (countryId == null) {
+                Log.w("ADD_SPOT", "No country selected")
+                return@SubmitButton
+            }
+
             val spot = NewApiSpot(
                 destination = spotName,
-                location = country,
+                location = region,
+                country_id = countryId,
                 lat = lat,
                 long = long,
                 peakSeasonStart = startSeason,
@@ -458,6 +589,12 @@ fun AddSpotContent() {
             Thread {
                 val response = ApiService.addSpot(spot)
                 Log.d("ADD_SPOT", "Response: $response")
+
+                (context as? ComponentActivity)?.runOnUiThread {
+                    val intent = Intent(context, SpotListActivity::class.java)
+                    context.startActivity(intent)
+                    context.finish()
+                }
             }.start()
         }
     }

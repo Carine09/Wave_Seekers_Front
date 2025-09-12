@@ -88,11 +88,19 @@ data class ApiUser(
 
 // Dynamic converter function
 fun ApiSpot.toUiSpot(): Spot {
+
+    val name = buildString {
+        append(destination)
+        if (location.isNotBlank()) append(", $location")
+    }
+
+    val uiCountry = if (country_name.equals(location, ignoreCase = true)) "" else country_name
+
     return Spot(
         id = this.id.toString(),
         imageRes = getImageResourceForDestination(this.destination),
-        spotName = "${this.destination}, ${this.location}",
-        country = this.country_name, // ✅ maintenant direct
+        spotName = name,
+        country = uiCountry,
         imageContentDescription = "${this.destination} spot picture",
         difficultyLevel = this.difficulty_level,
         peakSeasonStart = this.peak_season_start,
@@ -247,14 +255,15 @@ fun SpotCard(
                 modifier = Modifier
                     .padding(top = 8.dp)
             )
-            Text(
-                text = " | $country",
-                fontFamily = NeueMontrealMediumFontFamily,
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 14.sp,
-                modifier = Modifier
-                    .padding(top = 8.dp)
-            )
+            if (country.isNotBlank()) {
+                Text(
+                    text = " | $country",
+                    fontFamily = NeueMontrealMediumFontFamily,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
         }
         Row(
             verticalAlignment = Alignment.CenterVertically
